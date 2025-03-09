@@ -92,6 +92,11 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Auth config
+
+AUTH_USER_MODEL = 'accounts.AppUser'
+
+
 # Internationalization
 
 LANGUAGE_CODE = 'en-us'
@@ -118,8 +123,12 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = 'local_cdn'
 
+# Media config
+
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+MAX_IMAGE_SIZE = 10
 
 # Default primary key field type
 
