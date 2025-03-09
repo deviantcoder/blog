@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     # apps
 
     'accounts.apps.AccountsConfig',
+    'commands.apps.CommandsConfig',
 ]
 
 MIDDLEWARE = [
