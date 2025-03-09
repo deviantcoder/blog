@@ -107,6 +107,20 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_BASE_DIR = BASE_DIR / 'static'
+STATICFILES_BASE_DIR.mkdir(exist_ok=True, parents=True)
+
+STATICFILES_VENDOR_DIR = STATICFILES_BASE_DIR / 'vendor'
+
+STATICFILES_DIRS = [
+    STATICFILES_BASE_DIR,
+]
+
+STATIC_ROOT = 'local_cdn'
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Default primary key field type
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
