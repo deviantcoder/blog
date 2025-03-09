@@ -18,10 +18,10 @@ def compress_image(file):
                 image = image.convert('RGB')
 
             image_io = BytesIO()
-
+            name = os.path.splitext(file.name)[0] + '.jpg'
             image.save(image_io, format='JPEG', quality=50, optimize=True)
 
-            return File(image_io, name=file.name)
+            return File(image_io, name=name)
 
     except Exception as e:
         pass # logging will be here

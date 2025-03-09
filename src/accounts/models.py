@@ -23,7 +23,7 @@ def upload_to(instance, filename):
     ext = os.path.splitext(filename)[-1].lower()
     new_filename = shortuuid.uuid()[:8]
 
-    return f'users/{instance.id[:8]}/{new_filename}{ext}'
+    return f'users/{str(instance.id)[:8]}/{new_filename}{ext}'
 
 
 class AppUser(AbstractUser):
