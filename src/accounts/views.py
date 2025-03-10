@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 
-from .forms import LoginForm
+from .forms import LoginForm, RegisterForm
 
 
 def login_view(request):
@@ -21,3 +21,25 @@ def login_view(request):
     }
 
     return render(request, 'accounts/login.html', context)
+
+
+def register_view(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = form.save()
+
+            user = authenticate(request, username=user.username, password=form.cleaned_data.get('password1'))
+
+            login(request, user)
+
+            return redirect('/')
+    else:
+        form = RegisterForm()
+
+    context = {
+        'title': 'Sign Up',
+        'form': form,
+    }
+
+    return render(request, 'accounts/register.html', context)

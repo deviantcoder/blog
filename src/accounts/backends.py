@@ -6,6 +6,10 @@ User = get_user_model()
 
 
 class EmailOrUsernameModelBackend(ModelBackend):
+    """
+    Custom authentication backend that allows users to authenticate using 
+    either their email address or username.
+    """
 
     def authenticate(self, request, username=None, password=None, **kwargs):
         if username is None:

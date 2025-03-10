@@ -38,7 +38,8 @@ class AppUser(AbstractUser):
         validators=[
             FileExtensionValidator(ALLOWED_IMAGE_EXTENSIONS),
             validate_file_size(settings.MAX_IMAGE_SIZE),
-        ]
+        ],
+        blank=True
     )
 
     email_verified = models.BooleanField(default=False)
