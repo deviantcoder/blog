@@ -3,6 +3,16 @@ from io import BytesIO
 
 from django.core.files import File
 from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
+
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+
+from django.template.loader import render_to_string
+
+from django.conf import settings
 
 from PIL import Image
 
@@ -42,3 +52,33 @@ def validate_file_size(max_size_mb: int = 10):
             raise ValidationError(f'File size cannot exceed {max_size_mb} MB. Current file size: {file.size}')
 
     return _validate
+
+
+def send_verify_email(user):
+    """
+    Sends an email verification link to the specified user.
+    """
+
+    token_generator = PasswordResetTokenGenerator()
+
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    token = token_generator.make_token(user)
+    domain = settings.DOMAIN
+    verify_url = f'{domain}/accounts/verify-email/{uid}/{token}'
+
+    subject = 'Email Verification'
+    message = render_to_string(
+        'emails/verify_email.html',
+        {
+            'user': user,
+            'verify_url': verify_url,
+        }
+    )
+
+    send_mail(
+        subject,
+        message,
+        settings.EMAIL_HOST_USER,
+        [user.email],
+        html_message=message
+    )

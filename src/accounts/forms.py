@@ -6,6 +6,8 @@ from django.contrib.auth import authenticate, get_user_model
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Submit, Column
 
+from core.utils import send_verify_email
+
 
 User = get_user_model()
 
@@ -78,6 +80,18 @@ class RegisterForm(UserCreationForm):
             ),
             Submit('submit', 'Sign Up', css_class='btn btn-primary w-100 rounded-3 fw-semibold'),
         )
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+
+        user.is_active = False
+
+        if commit:
+            user.save()
+            send_verify_email(user)
+
+        return user
+
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
