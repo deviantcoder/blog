@@ -7,6 +7,10 @@ from helpers.downloader import download_to_local
 
 
 class Command(BaseCommand):
+    """
+    Command to download vendor static files from a given URL (custom filename can be specified).
+    """
+
     help = 'Downloads vendor static files from the given URL'
 
     def add_arguments(self, parser):

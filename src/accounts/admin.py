@@ -16,8 +16,8 @@ class AppUserAdmin(UserAdmin):
     readonly_fields = ('created', 'updated')
 
     fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('email_verified',)}),
+        (None, {'fields': ('email_verified', 'display_name', 'image')}),
     )
     add_fieldsets = UserAdmin.add_fieldsets + (
-        (None, {'fields': ('email_verified',)}),
+        (None, {'fields': ('email_verified', 'display_name', 'email', 'image')}),
     )

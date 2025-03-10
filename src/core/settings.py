@@ -24,6 +24,9 @@ INSTALLED_APPS = [
 
     # 3-rd party
 
+    'crispy_forms',
+    'crispy_bootstrap5',
+
     # apps
 
     'accounts.apps.AccountsConfig',
@@ -97,6 +100,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'accounts.AppUser'
 
+AUTHENTICATION_BACKENDS = [
+    'accounts.backends.EmailOrUsernameModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+# Crispy forms
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # Internationalization
 
