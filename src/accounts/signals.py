@@ -1,10 +1,15 @@
 import os
 import shutil
+import logging
 
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
 from django.contrib.auth import get_user_model
 
+from core.utils import send_log
+
+
+logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
@@ -16,4 +21,4 @@ def delete_user_media_files(sender, instance, **kwargs):
         if os.path.exists(path):
             shutil.rmtree(path)
     except Exception as e:
-        pass # logging will be here
+        send_log(logger, f'Media deletion failed for: {instance.username}.', level='warning')

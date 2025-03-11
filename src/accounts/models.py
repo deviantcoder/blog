@@ -1,5 +1,6 @@
 import os
 import shortuuid
+import logging
 
 from uuid import uuid4
 
@@ -8,8 +9,10 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import FileExtensionValidator
 from django.conf import settings
 
-from core.utils import compress_image ,validate_file_size
+from core.utils import compress_image, validate_file_size, send_log
 
+
+logger = logging.getLogger(__name__)
 
 ALLOWED_IMAGE_EXTENSIONS = ('jpg', 'jpeg', 'png', 'gif', 'webp')
 DEFAULT_IMAGE_PATH = 'defaults/def.png'
@@ -70,13 +73,13 @@ class AppUser(AbstractUser):
                     super().save(*args, **kwargs)
                     return
             except AppUser.DoesNotExist:
-                pass # logging will be here
+                send_log(logger, f'Instance with id {self.id} not found during update.', level='warning')
 
         if self.image and self.image != DEFAULT_IMAGE_PATH:
             try:
                 self.image = compress_image(self.image)
             except Exception as e:
-                pass # logging will be here
+                send_log(logger, f'Image compression failed for: {self.username}: {e}.', level='error')
 
         super().save(*args, **kwargs)
 

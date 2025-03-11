@@ -1,4 +1,6 @@
 import os
+import logging
+
 from io import BytesIO
 
 from django.core.files import File
@@ -9,12 +11,16 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
+from django.utils import timezone
 
 from django.template.loader import render_to_string
 
 from django.conf import settings
 
 from PIL import Image
+
+
+logger = logging.getLogger(__name__)
 
 
 def compress_image(file):
@@ -34,7 +40,7 @@ def compress_image(file):
             return File(image_io, name=name)
 
     except Exception as e:
-        pass # logging will be here
+        send_log(logger, 'Image compression failed', level='warning')
 
 
 def validate_file_size(max_size_mb: int = 10):
@@ -82,3 +88,20 @@ def send_verify_email(user):
         [user.email],
         html_message=message
     )
+
+
+def send_log(logger: logging.Logger, message: str = None, level: str = 'info'):
+    LEVEL_MAP = {
+        'debug': logging.DEBUG,
+        'info': logging.INFO,
+        'warning': logging.WARNING,
+        'error': logging.ERROR,
+        'critical': logging.CRITICAL,
+    }
+
+    try:
+        log_level = LEVEL_MAP.get(level.lower().strip())
+    except KeyError:
+        raise ValueError(f'Invalid log level: {level}')
+
+    return logger.log(log_level, message)
