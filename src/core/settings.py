@@ -23,6 +23,21 @@ EMAIL_USE_SSL = config('EMAIL_USE_SSL', cast=bool, default=False)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', cast=str, default='jamessullivanpost@gmail.com')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', cast=str)
 
+# OAuth config (Google, GitHub)
+
+GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID', cast=str)
+GOOGLE_CLIENT_SECRET = config('GOOGLE_CLIENT_SECRET', cast=str)
+GOOGLE_REDIRECT_URI = 'http://127.0.0.1:8000/social/oauth/google/callback'
+GOOGLE_AUTH_URI = 'https://accounts.google.com/o/oauth2/auth'
+GOOGLE_TOKEN_URI = 'https://oauth2.googleapis.com/token'
+GOOGLE_USERINFO_URI = 'https://www.googleapis.com/oauth2/v3/userinfo'
+
+GITHUB_CLIENT_ID = config('GITHUB_CLIENT_ID', cast=str)
+GITHUB_CLIENT_SECRET = config('GITHUB_CLIENT_SECRET', cast=str)
+GITHUB_REDIRECT_URI = 'http://127.0.0.1:8000/social/oauth/github/callback/'
+GITHUB_AUTH_URI = 'https://github.com/login/oauth/authorize'
+GITHUB_TOKEN_URI = 'https://github.com/login/oauth/access_token'
+GITHUB_USERINFO_URI = 'https://api.github.com/user'
 
 # Application definition
 
@@ -42,6 +57,7 @@ INSTALLED_APPS = [
     # apps
 
     'accounts.apps.AccountsConfig',
+    'social_accounts.apps.SocialAccountsConfig',
     'commands.apps.CommandsConfig',
 ]
 
