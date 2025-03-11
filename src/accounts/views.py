@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 
-from django.contrib.auth import login, authenticate, get_user_model
+from django.contrib.auth import login, get_user_model
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.contrib import messages
 
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
@@ -20,6 +21,7 @@ def login_view(request):
             user = form.get_user()
             if user is not None:
                 login(request, user)
+                messages.success(request, 'Logged In')
                 return redirect('/')
     else:
         form = LoginForm()
@@ -74,7 +76,7 @@ def verify_email(request, uidb64, token):
         user.backend = 'django.contrib.auth.backends.ModelBackend'
 
         login(request, user)
-
+        messages.success(request, 'Signed Up')
         return redirect('/')
     
     elif user and not user.email_verified:

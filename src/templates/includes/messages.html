@@ -1,0 +1,11 @@
+{% if messages %}
+    <div class="d-flex justify-content-center w-100 fixed-top" style="z-index: 1050; margin-top: 30px;">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} radius-md border-0 shadow-lg mt-2 alert-dismissible fade show text-center" role="alert"
+                style="max-width: 300px;">
+                <strong>{{ message }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
