@@ -40,7 +40,7 @@ class AppUser(AbstractUser):
         upload_to=upload_to,
         validators=[
             FileExtensionValidator(ALLOWED_IMAGE_EXTENSIONS),
-            validate_file_size(settings.MAX_IMAGE_SIZE),
+            validate_file_size,
         ],
         blank=True
     )
