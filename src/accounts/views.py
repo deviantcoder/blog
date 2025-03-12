@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 
-from django.contrib.auth import login, get_user_model
+from django.contrib.auth import login, get_user_model, logout
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib import messages
 
@@ -15,6 +15,9 @@ token_generator = PasswordResetTokenGenerator()
 
 
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('/')
+
     if request.method == 'POST':
         form = LoginForm(data=request.POST)
         if form.is_valid():
@@ -34,7 +37,17 @@ def login_view(request):
     return render(request, 'accounts/login.html', context)
 
 
+def logout_user(request):
+    if request.user.is_authenticated:
+        logout(request)
+        messages.info(request, 'Signed Out')
+    return redirect('/')
+
+
 def register_view(request):
+    if request.user.is_authenticated:
+        return redirect('/')
+
     if request.method == 'POST':
         form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():

@@ -7,8 +7,21 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Sign In</a></li>
-                <li class="nav-item"><a class="nav-link btn btn-outline-light btn-sm" href="#">Get Started</a></li>
+                {% if request.user.is_authenticated %}
+                    <div class="dropdown nav-item">
+                        <button class="btn dropdown-toggle nav-link" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            Profile
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">View Profile</a>
+                            <hr>
+                            <a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">Sign Out</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Sign In</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-outline-light btn-sm" href="#">Get Started</a></li>
+                {% endif %}
             </ul>
         </div>
     </div>

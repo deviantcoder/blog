@@ -163,4 +163,6 @@ def oauth_callback(request, provider):
 
     login(request, user)
 
+    messages.success(request, 'Signed In')
+
     return redirect('/')
