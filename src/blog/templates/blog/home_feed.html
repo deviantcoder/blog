@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ title }}
+{% endblock title %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="post-container">
+                <h2 class="post-title">
+                    <a href="#">My First Blog Post</a>
+                </h2>
+                <p class="post-excerpt">This is a short excerpt of my first post. It’s about something interesting I wanted to share with the world, and it’s written in a way that’s meant to draw you in.</p>
+                <p class="post-meta">John Doe · March 12, 2025</p>
+            </div>
+
+            <div class="post-container">
+                <h2 class="post-title">
+                    <a href="#">Learning Django</a>
+                </h2>
+                <p class="post-excerpt">A quick dive into how I built this blog using Django and Bootstrap. It’s been a fun journey so far, and I’m excited to see where it goes next.</p>
+                <p class="post-meta">Jane Smith · March 11, 2025</p>
+            </div>
+
+            <div class="post-container">
+                <h2 class="post-title">
+                    <a href="#">Why Blogs Matter</a>
+                </h2>
+                <p class="post-excerpt">Some thoughts on why blogging is still relevant in 2025. Spoiler: it’s all about connection and sharing ideas in a noisy world.</p>
+                <p class="post-meta">Alex Brown · March 10, 2025</p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% include 'includes/pagination.html' %}
+
+{% endblock content %}

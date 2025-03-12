@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'social_accounts.apps.SocialAccountsConfig',
     'commands.apps.CommandsConfig',
+    'blog.apps.BlogConfig',
 ]
 
 MIDDLEWARE = [

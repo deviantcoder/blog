@@ -1,3 +1,32 @@
 body {
     font-family: 'Comfortaa', cursive;
 }
+.post-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #000;
+}
+.post-title a {
+    text-decoration: none;
+    color: inherit;
+}
+.post-title a:hover {
+    text-decoration: underline;
+}
+.post-excerpt {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.5;
+}
+.post-meta {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+.post-container {
+    border-bottom: 1px solid #e9ecef;
+    padding: 20px 0;
+}
+.post-container:hover {
+    background-color: #f1f3f5;
+}
