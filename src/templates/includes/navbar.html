@@ -1,23 +1,27 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
-    <div class="container">
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
+    <div class="container d-flex align-items-center">
         <a class="navbar-brand fw-bold" href="/">Django Blog</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+            <ul class="navbar-nav ms-auto d-lg-flex align-items-lg-center">
                 {% if request.user.is_authenticated %}
+                    <li class="nav-item me-3">
+                        <a class="nav-link d-flex align-items-center" href="{% url 'blog:create_post' %}">
+                            <i class="bi bi-feather me-1"></i> Write
+                        </a>
+                    </li>
                     <div class="dropdown nav-item">
-                        <button class="btn dropdown-toggle nav-link" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            Profile
+                        <button class="btn dropdown-toggle nav-link d-flex align-items-center" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="{{ request.user.image.url }}" alt="Profile" class="rounded-circle" width="35" height="35">
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" href="#">View Profile</a>
                             <hr>
                             <a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">Sign Out</a>
                         </div>
-                    </div>
+                    </div>                    
                 {% else %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Sign In</a></li>
                     <li class="nav-item"><a class="nav-link btn btn-outline-light btn-sm" href="#">Get Started</a></li>

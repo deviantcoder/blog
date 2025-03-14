@@ -48,9 +48,11 @@ def validate_file_size(file):
     Validates the size of the given file against the maximum allowed size.
     """
 
-    max_size_mb = settings.MAX_IMAGE_SIZE / (1024 * 1024)
-    if file.size > max_size_mb:
-        raise ValidationError(f'File size cannot exceed {max_size_mb} MB. Current file size: {file.size}')
+    max_size_bytes = settings.MAX_IMAGE_SIZE * 1024 * 1024  # Convert MB to bytes
+    current_size_mb = file.size / (1024 * 1024)
+    
+    if file.size > max_size_bytes:
+        raise ValidationError(f'File size cannot exceed {settings.MAX_IMAGE_SIZE:.2f} MB. Current file size: {current_size_mb:.2f} MB')
 
 
 def send_verify_email(user):

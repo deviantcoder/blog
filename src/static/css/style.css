@@ -30,3 +30,21 @@ body {
 .post-container:hover {
     background-color: #f1f3f5;
 }
+.post-image {
+    display: block;
+    margin: 0 auto;
+    max-height: 500px;
+    object-fit: cover;
+}
+.black-on-hover {
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+.black-on-hover:hover {
+    color: black;
+    transform: scale(1.2);
+}
+@media (max-width: 768px) {
+    .post-image {
+        margin: 0;
+    }
+}

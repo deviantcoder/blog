@@ -34,7 +34,7 @@ class LoginForm(AuthenticationForm):
                 Field('password', css_class='form-control rounded-3', placeholder='Password', required=True),
                 css_class='mb-3 text-start'
             ),
-            Submit('submit', 'Sign In', css_class='btn btn-success w-100 rounded-3 fw-semibold'),
+            Submit('submit', 'Sign In', css_class='btn btn-dark w-100 rounded-0 fw-semibold'),
         )
 
 
@@ -78,7 +78,7 @@ class RegisterForm(UserCreationForm):
                 Field('image', css_class='form-control rounded-3'),
                 css_class='mb-3 text-start'
             ),
-            Submit('submit', 'Sign Up', css_class='btn btn-primary w-100 rounded-3 fw-semibold'),
+            Submit('submit', 'Sign Up', css_class='btn btn-dark w-100 rounded-0 fw-semibold'),
         )
 
     def save(self, commit=True):

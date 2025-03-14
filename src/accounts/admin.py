@@ -11,7 +11,7 @@ class AppUserAdmin(UserAdmin):
         'username', 'email', 'email_verified', 'is_active', 'is_staff', 'is_superuser', 'created'
     )
     list_filter = ('is_active', 'is_staff', 'email_verified')
-    search_fields = ('username', 'email')
+    search_fields = ('username', 'email', 'display_name')
     ordering = ('-created',)
     readonly_fields = ('created', 'updated')
 

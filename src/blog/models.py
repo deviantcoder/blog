@@ -106,3 +106,7 @@ class Post(models.Model):
                 send_log(logger, f'Image compression failed for post: {self.id}: {e}.', level='error')
 
         super().save(*args, *kwargs)
+
+    @property
+    def get_created(self):
+        return self.created.strftime('%B %d, %Y')
