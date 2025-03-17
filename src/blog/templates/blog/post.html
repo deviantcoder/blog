@@ -11,6 +11,7 @@
         <div class="col-12 col-md-10 col-lg-12">
             {% if request.user == post.author %}
                 <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-dark rounded-0">Edit</a>
+                <a href="{% url 'blog:delete_post' post.slug %}" class="btn btn-danger rounded-0">Delete</a>
             {% endif %}
 
             <h1 class="display-5 fw-bold mb-3">{{ post.title }}</h1>

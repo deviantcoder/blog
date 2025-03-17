@@ -73,9 +73,21 @@ def edit_post(request, slug):
 
 
 @login_required(login_url='accounts:login')
-def delete_post(request):
+def delete_post(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+
+    if request.method == 'POST':
+        try:
+            post.delete()
+            messages.info(request, 'Post deleted')
+            return redirect('/')
+        except Post.DoesNotExist:
+            messages.warning(request, 'Post does not exist')
+            return redirect('/')
+
     context = {
         'title': 'Delete Post',
+        'post': post,
     }
 
-    return render(request, 'blog/post_form.html', context)
+    return render(request, 'blog/delete_post.html', context)

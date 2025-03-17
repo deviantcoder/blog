@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ title }}
+{% endblock title %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center mt-5 mb-5">
+    <div class="card shadow-lg p-4 border-0 rounded-0" style="width: 35rem;">
+        <div class="card-body text-center">
+            <h3 class="card-title mb-3 fw-bold">Are you sure you want to <span class="text-danger">delete</span> post?</h3>
+            <span>"{{ post.title }}"</span>
+            <hr>
+            <form method="post" action="{% url 'blog:delete_post' post.slug %}">
+                {% csrf_token %}
+                <button class="btn btn-danger rounded-0">Delete</button>
+                <button class="btn btn-dark rounded-0">Back</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
