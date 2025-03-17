@@ -9,7 +9,7 @@ from .models import Post
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('title', 'image', 'content')
+        fields = ('title', 'header_image', 'content')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -26,7 +26,7 @@ class PostForm(forms.ModelForm):
                 css_class='mb-3 text-start'
             ),
             Column(
-                Field('image', css_class='form-control rounded-3'),
+                Field('header_image', css_class='form-control rounded-3'),
                 css_class='mb-3 text-start'
             ),
             Column(

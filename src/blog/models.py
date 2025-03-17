@@ -47,13 +47,13 @@ class Post(models.Model):
 
     title = models.CharField(max_length=100)
     content = models.TextField()
-    image = models.ImageField(
-        default=DEFAULT_IMAGE_PATH,
+    header_image = models.ImageField(
         upload_to=upload_to,
         validators=[
             FileExtensionValidator(ALLOWED_IMAGE_EXTENSIONS),
             validate_file_size,
         ],
+        null=True,
         blank=True
     )
 
@@ -90,20 +90,20 @@ class Post(models.Model):
                     slug = base_slug
                 self.slug = slug
 
-        if not is_new and self.image:
+        if not is_new and self.header_image:
             try:
                 old_instance = Post.objects.get(id=self.id)
-                if old_instance.image == self.image:
+                if old_instance.header_image == self.header_image:
                     super().save(*args, **kwargs)
                     return
             except Post.DoesNotExist:
                 send_log(logger, f'Instance with id {self.id} not found during update.', level='warning')
 
-        if self.image and self.image != DEFAULT_IMAGE_PATH:
+        if self.header_image:
             try:
-                self.image = compress_image(self.image)
+                self.header_image = compress_image(self.header_image)
             except Exception as e:
-                send_log(logger, f'Image compression failed for post: {self.id}: {e}.', level='error')
+                send_log(logger, f'Image compression failed for (post): {self.id}: {e}.', level='error')
 
         super().save(*args, *kwargs)
 
