@@ -60,3 +60,19 @@ body {
         margin: 0.5rem 0;
     }
 }
+.profile-pic {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.post-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+.post-item {
+    transition: background-color 0.5s;
+}
+.post-item:hover {
+    background-color: #f8f9fa;
+}

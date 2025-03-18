@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+from blog.models import Post
+
 from .forms import ProfileForm
 
 
@@ -24,3 +26,12 @@ def edit_profile(request):
     }
 
     return render(request, 'profiles/edit_profile.html', context)
+
+
+def profile_settings(request):
+    context = {
+        'title': 'Settings',
+        'published_posts': Post.objects.filter(author=request.user.profile, status='published'),
+        'draft_posts': Post.objects.filter(author=request.user.profile, status='draft'),
+    }
+    return render(request, 'profiles/settings.html', context)

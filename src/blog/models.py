@@ -40,7 +40,9 @@ class Post(models.Model):
         ('published', 'Published'),
     )
 
-    author = models.ForeignKey(settings.PROFILE_USER_MODEL, on_delete=models.CASCADE, related_name='posts')
+    author = models.ForeignKey(
+        settings.PROFILE_USER_MODEL, on_delete=models.SET_NULL, related_name='posts', null=True
+        )
 
     title = models.CharField(max_length=100)
     content = models.TextField()
@@ -72,7 +74,7 @@ class Post(models.Model):
         ]
 
     def __str__(self):
-        return f'{self.author.user.username}: {self.title[:20]}'
+        return f'{self.author.user. username}: {self.title[:20]}'
     
     def save(self, *args, **kwargs):
         is_new = self._state.adding

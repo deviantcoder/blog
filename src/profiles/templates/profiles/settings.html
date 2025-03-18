@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Settings
+{% endblock title %}
+
+{% block content %}
+
+<div class="container my-5" style="max-width: 800px;">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10">
+            <h1 class="display-5 fw-bold mb-4">Settings</h1>
+
+            <div class="mb-5">
+                <h2 class="h4 fw-semibold mb-3">Account</h2>
+                <form method="post" class="mb-3">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control rounded-0" id="username" name="username" value="{{ user.username }}" placeholder="Enter new username">
+                    </div>
+                    <button type="submit" name="update_username" class="btn btn-dark rounded-0 border-0 fw-semibold">Update Username</button>
+                </form>
+            </div>
+
+            <div class="mb-5">
+                <h2 class="h4 fw-semibold mb-3">Profile Picture</h2>
+                <div class="d-flex align-items-center mb-3">
+                    <img src="{{ user.profile.image.url|default:'/media/defaults/def.png' }}" alt="Profile Picture" class="profile-pic me-3">
+                    <form method="post" enctype="multipart/form-data" class="d-inline">
+                        {% csrf_token %}
+                        <input type="file" name="image" class="d-none" id="imageInput">
+                        <button type="button" class="btn btn-outline-dark btn-sm" onclick="document.getElementById('imageInput').click();">Change Picture</button>
+                        <button type="submit" name="update_image" class="d-none">Upload</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mb-5">
+                <h2 class="h4 fw-semibold mb-3">Published Posts</h2>
+                <div class="post-list border rounded-0 p-3">
+                    {% for post in published_posts %}
+                        <div class="post-item p-2">
+                            <a href="{% url 'blog:edit_post' post.slug %}" class="text-dark text-decoration-none">{{ post.title }}</a>
+                            <span class="text-muted small ms-2">· {{ post.created|date:"F d, Y" }}</span>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted">No published posts yet.</p>
+                    {% endfor %}
+                </div>
+                <p class="text-muted small mt-2">Total: {{ published_posts|length }} published post{{ published_posts|length|pluralize }}</p>
+            </div>
+
+            <div class="mb-5">
+                <h2 class="h4 fw-semibold mb-3">Drafts</h2>
+                <div class="post-list border rounded-0 p-3">
+                    {% for post in draft_posts %}
+                        <div class="post-item p-2">
+                            <a href="{% url 'blog:edit_post' post.slug %}" class="text-dark text-decoration-none">{{ post.title }}</a>
+                            <span class="text-muted small ms-2">· {{ post.created|date:"F d, Y" }}</span>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted">No drafts yet.</p>
+                    {% endfor %}
+                </div>
+                <p class="text-muted small mt-2">Total: {{ draft_posts|length }} draft{{ draft_posts|length|pluralize }}</p>
+            </div>
+
+            <div class="mb-5">
+                <h2 class="h4 fw-semibold mb-3">Preferences</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="darkMode" name="dark_mode" {% if request.session.dark_mode %}checked{% endif %}>
+                        <label class="form-check-label" for="darkMode">Dark Mode</label>
+                    </div>
+                    <button type="submit" name="update_preferences" class="btn btn-dark rounded-0 fw-semibold mt-2">Save Preferences</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
