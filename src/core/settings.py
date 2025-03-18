@@ -58,6 +58,7 @@ INSTALLED_APPS = [
 
     'accounts.apps.AccountsConfig',
     'social_accounts.apps.SocialAccountsConfig',
+    'profiles.apps.ProfilesConfig',
     'commands.apps.CommandsConfig',
     'blog.apps.BlogConfig',
 ]
@@ -133,6 +134,8 @@ AUTHENTICATION_BACKENDS = [
     'accounts.backends.EmailOrUsernameModelBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+PROFILE_USER_MODEL = 'profiles.Profile'
 
 # Logging config
 

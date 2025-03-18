@@ -46,7 +46,7 @@ class RegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = [
-            'email', 'username', 'password1', 'password2', 'image'
+            'email', 'username', 'password1', 'password2'
         ]
 
     def __init__(self, *args, **kwargs):
@@ -54,9 +54,7 @@ class RegisterForm(UserCreationForm):
 
         self.helper = FormHelper()
         self.helper.form_method = 'post'
-        self.helper.attrs = {
-            'enctype': 'multipart/form-data',
-        }
+
         self.helper.layout = Layout(
             Column(
                 Field('email', css_class='form-control rounded-3', autofocus=True, placeholder='Email', required=True),
@@ -72,10 +70,6 @@ class RegisterForm(UserCreationForm):
             ),
             Column(
                 Field('password2', css_class='form-control rounded-3', placeholder='Repeat Password', required=True),
-                css_class='mb-3 text-start'
-            ),
-            Column(
-                Field('image', css_class='form-control rounded-3'),
                 css_class='mb-3 text-start'
             ),
             Submit('submit', 'Sign Up', css_class='btn btn-dark w-100 rounded-0 fw-semibold'),

@@ -1,11 +1,10 @@
-import logging
 import os
+import logging
 import shortuuid
 
 from uuid import uuid4
 
 from django.db import models
-from django.contrib.auth import get_user_model
 from django.utils.text import slugify
 from django.core.validators import FileExtensionValidator
 from django.conf import settings
@@ -15,8 +14,6 @@ from core.utils import validate_file_size, send_log, compress_image
 
 
 logger = logging.getLogger(__name__)
-
-User = get_user_model()
 
 ALLOWED_IMAGE_EXTENSIONS = ('jpg', 'jpeg', 'png', 'gif', 'webp')
 DEFAULT_IMAGE_PATH = 'defaults/def.png'
@@ -43,7 +40,7 @@ class Post(models.Model):
         ('published', 'Published'),
     )
 
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
+    author = models.ForeignKey(settings.PROFILE_USER_MODEL, on_delete=models.CASCADE, related_name='posts')
 
     title = models.CharField(max_length=100)
     content = models.TextField()
@@ -75,7 +72,7 @@ class Post(models.Model):
         ]
 
     def __str__(self):
-        return f'{self.author.username}: {self.title[:20]}'
+        return f'{self.author.user.username}: {self.title[:20]}'
     
     def save(self, *args, **kwargs):
         is_new = self._state.adding
