@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load blog_tags %}
+
 {% block title %}
     {{ title }}
 {% endblock title %}
@@ -14,7 +16,7 @@
                     <h2 class="post-title">
                         <a href="{% url 'blog:view_post' post.slug %}">{{ post.title }}</a>
                     </h2>
-                    <p class="post-excerpt">{{ post.content|slice:200 }}...</p>
+                    <p class="post-excerpt">{{ post.content|plaintext|slice:200 }}...</p>
                     <p class="post-meta">{{ post.author.display_name }} · {{ post.get_created }}</p>
                 </div>
             {% endfor %}

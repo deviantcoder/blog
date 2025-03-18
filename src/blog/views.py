@@ -33,11 +33,11 @@ def create_post(request):
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
-            post.author = request.user
+            post.author = request.user.profile
             post.status = 'published'
             post.save()
             messages.success(request, 'Post created')
-            return redirect('/')
+            return redirect('blog:view_post', post.slug)
     else:
         form = PostForm()
 
@@ -59,7 +59,7 @@ def edit_post(request, slug):
         if form.is_valid():
             form.save()
             messages.success(request, 'Post updated')
-            return redirect('/')
+            return redirect('blog:view_post', post.slug)
     else:
         form = PostForm(instance=post)
 

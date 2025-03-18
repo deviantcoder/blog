@@ -18,6 +18,7 @@ class PostForm(forms.ModelForm):
         self.helper.form_method = 'post'
         self.helper.attrs = {
             'enctype': 'multipart/form-data',
+            'id': 'postForm',
         }
 
         self.helper.layout = Layout(
@@ -30,7 +31,7 @@ class PostForm(forms.ModelForm):
                 css_class='mb-3 text-start'
             ),
             Column(
-                Field('content', css_class='form-control rounded-3', placeholder='Start to write here...', required=True),
+                Field('content', css_class='form-control rounded-3', placeholder='Start to write here...', required=False),
                 css_class='mb-3 text-start'
             ),
             Row(

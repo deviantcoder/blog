@@ -8,6 +8,7 @@ django-crispy-forms==2.3
 idna==3.10
 Markdown==3.7
 pillow==11.1.0
+Pygments==2.19.1
 python-decouple==3.8
 requests==2.32.3
 shortuuid==1.0.13

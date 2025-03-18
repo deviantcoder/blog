@@ -165,4 +165,4 @@ def oauth_callback(request, provider):
 
     messages.success(request, 'Signed In')
 
-    return redirect('/')
+    return redirect('profiles:edit_profile')

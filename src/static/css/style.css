@@ -48,3 +48,15 @@ body {
         margin: 0;
     }
 }
+.markdown-content img {
+    display: block;
+    margin: 1rem auto;
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+@media (max-width: 768px) {
+    .markdown-content img {
+        margin: 0.5rem 0;
+    }
+}

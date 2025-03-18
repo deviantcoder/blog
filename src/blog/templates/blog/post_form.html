@@ -7,12 +7,39 @@
 {% endblock title %}
 
 {% block content %}
-<div class="d-flex justify-content-center align-items-center mt-5 mb-5">
-    <div class="card shadow-lg p-4 border-0 rounded-0" style="width: 35rem;">
-        <div class="card-body text-center">
-            <h3 class="card-title mb-3 fw-bold">{{ header }}</h3>
-            {% crispy form %}
-        </div>
-    </div>
+<div class="container my-5 card border-0 rounded-0 shadow-lg" style="max-width: 700px;">
+    <h1 class="display-5 fw-bold mb-4">
+        {% if form.instance.pk %}Edit Post{% else %}Create a New Post{% endif %}
+    </h1>
+    <form method="post" enctype="multipart/form-data" id="postForm" novalidate>
+        {% csrf_token %}
+        {% crispy form %}
+    </form>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var easyMDE = new EasyMDE({
+            element: document.getElementById('id_content'),
+            toolbar: [
+                'bold', 'italic', 'heading', 'code', '|',
+                'quote', 'unordered-list', 'ordered-list', '|',
+                'link', 'image', 'horizontal-rule', '|',
+                'preview', 'side-by-side', 'fullscreen', 'table',
+            ],
+            spellChecker: false,
+            status: false,
+            renderingConfig: {
+                codeSyntaxHighlighting: true
+            }
+        });
+
+        document.getElementById('postForm').addEventListener('submit', function (e) {
+            var content = easyMDE.value().trim();
+            document.getElementById('id_content').value = content;
+            document.getElementById('id_content').removeAttribute('required');
+        });
+    });
+</script>
+
 {% endblock content %}
