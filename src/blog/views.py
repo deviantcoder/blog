@@ -7,11 +7,12 @@ from .forms import PostForm
 
 
 def home_feed_view(request):
-    posts = Post.objects.filter(status='published')
+    posts = Post.objects.filter(status='published').order_by('-created')
 
     context = {
         'title': 'Feed',
         'posts': posts,
+        'recent_posts': request.session.get('recent_posts', [])
     }
 
     return render(request, 'blog/home_feed.html', context)
@@ -19,6 +20,14 @@ def home_feed_view(request):
 
 def view_post(request, slug):
     post = get_object_or_404(Post, slug=slug)
+
+    if request.user.is_authenticated:
+        recent_posts = request.session.get('recent_posts', [])
+        post_id = str(post.id)
+
+        if post_id not in recent_posts:
+            recent_posts.append(post_id)
+            request.session['recent_posts'] = recent_posts[:5]
 
     context = {
         'title': post.title,

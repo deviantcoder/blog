@@ -76,3 +76,24 @@ body {
 .post-item:hover {
     background-color: #f8f9fa;
 }
+.sidebar {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+}
+.sidebar h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+.sidebar-item {
+    margin-bottom: 1rem;
+}
+.sidebar-item:hover {
+    background-color: #ecedef;
+}
+.sidebar-item a {
+    color: #495057;
+    text-decoration: none;
+}
+.sidebar-item a:hover {
+    text-decoration: underline;
+}
