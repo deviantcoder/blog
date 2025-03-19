@@ -1,0 +1,17 @@
+{% load blog_tags %}
+
+<div class="sidebar">
+    <h3>Recently Viewed Posts</h3>
+    {% for post_id in recent_posts %}
+        {% with post=posts|get_post_by_id:post_id %}
+            {% if post %}
+                <div class="sidebar-item">
+                    <a href="{% url 'blog:view_post' post.slug %}">{{ post.title }}</a>
+                    <p class="text-muted small mb-0">{{ post.author.display_name }} · {{ post.get_created }}</p>
+                </div>
+            {% endif %}
+        {% endwith %}
+    {% empty %}
+        <p class="text-muted small">No recently viewed posts.</p>
+    {% endfor %}
+</div>

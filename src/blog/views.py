@@ -4,6 +4,7 @@ from django.contrib import messages
 
 from .models import Post
 from .forms import PostForm
+from .documents import PostDocument
 
 
 def home_feed_view(request):
@@ -100,3 +101,29 @@ def delete_post(request, slug):
     }
 
     return render(request, 'blog/delete_post.html', context)
+
+
+def search(request):
+    query = request.GET.get('query', '').strip()
+    posts = PostDocument.search().filter('term', status='published')
+
+    if query:
+        posts = posts.query(
+            'multi_match',
+            query=query,
+            fields=['title^2', 'content'],
+            fuzziness='AUTO'
+        ).sort('-created')
+
+    post_ids = [hit.id for hit in posts]
+
+    post_queryset = Post.objects.filter(id__in=post_ids).order_by('-created') if post_ids else Post.objects.none()
+
+    context = {
+        'search_query': query or 'Search',
+        'posts': post_queryset,
+        'query': query,
+        'recent_posts': request.session.get('recent_posts', [])
+    }
+
+    return render(request, 'blog/search.html', context)

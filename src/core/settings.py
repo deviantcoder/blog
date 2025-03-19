@@ -39,6 +39,14 @@ GITHUB_AUTH_URI = 'https://github.com/login/oauth/authorize'
 GITHUB_TOKEN_URI = 'https://github.com/login/oauth/access_token'
 GITHUB_USERINFO_URI = 'https://api.github.com/user'
 
+# Elasticsearch config
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'http://127.0.0.1:9200/'
+    },
+}
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -53,6 +61,7 @@ INSTALLED_APPS = [
 
     'crispy_forms',
     'crispy_bootstrap5',
+    'django_elasticsearch_dsl',
 
     # apps
 

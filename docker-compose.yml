@@ -1,0 +1,22 @@
+services:
+  elasticsearch:
+    image: elasticsearch:8.17.3
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - 9200:9200
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    networks:
+      - esnet
+
+volumes:
+  esdata:
+    driver: local
+
+networks:
+  esnet:
+    driver: bridge
