@@ -15,6 +15,8 @@
 
             <div class="mb-5">
                 <h2 class="h4 fw-semibold mb-3">Account</h2>
+                <label for="email">Email</label>
+                <p class="text-muted mb-3">{{ user.email }}</p>
                 <form method="post" class="mb-3">
                     {% csrf_token %}
                     <div class="mb-3">
@@ -29,11 +31,11 @@
                 <h2 class="h4 fw-semibold mb-3">Profile Picture</h2>
                 <div class="d-flex align-items-center mb-3">
                     <img src="{{ user.profile.image.url|default:'/media/defaults/def.png' }}" alt="Profile Picture" class="profile-pic me-3">
-                    <form method="post" enctype="multipart/form-data" class="d-inline">
+                    <form method="post" enctype="multipart/form-data" class="d-inline" id="imageForm">
                         {% csrf_token %}
-                        <input type="file" name="image" class="d-none" id="imageInput">
+                        <input type="file" name="image" class="d-none" id="imageInput" onchange="this.form.submit();">
                         <button type="button" class="btn btn-outline-dark btn-sm" onclick="document.getElementById('imageInput').click();">Change Picture</button>
-                        <button type="submit" name="update_image" class="d-none">Upload</button>
+                        <input type="hidden" name="update_image" value="true">
                     </form>
                 </div>
             </div>
@@ -67,7 +69,7 @@
                 </div>
                 <p class="text-muted small mt-2">Total: {{ draft_posts|length }} draft{{ draft_posts|length|pluralize }}</p>
             </div>
-
+            
             <div class="mb-5">
                 <h2 class="h4 fw-semibold mb-3">Preferences</h2>
                 <form method="post">
@@ -76,9 +78,14 @@
                         <input class="form-check-input" type="checkbox" id="darkMode" name="dark_mode" {% if request.session.dark_mode %}checked{% endif %}>
                         <label class="form-check-label" for="darkMode">Dark Mode</label>
                     </div>
-                    <button type="submit" name="update_preferences" class="btn btn-dark rounded-0 fw-semibold mt-2">Save Preferences</button>
+                    <button type="submit" name="update_preferences" class="btn btn-dark rounded-0 border-0 fw-semibold mt-2">Save Preferences</button>
                 </form>
             </div>
+            <hr>
+            <div class="mb-5">
+                <a href="{% url 'accounts:logout' %}" class="btn btn-danger rounded-0 border-0 fw-semibold mt-2">Log Out</a>
+            </div>
+
         </div>
     </div>
 </div>
