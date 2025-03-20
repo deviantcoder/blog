@@ -1,99 +1,126 @@
 body {
-    font-family: 'Comfortaa', cursive;
+  font-family: "Comfortaa", cursive;
 }
 .post-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    line-height: 1.2;
-    color: #000;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #000;
 }
 .post-title a {
-    text-decoration: none;
-    color: inherit;
+  text-decoration: none;
+  color: inherit;
 }
 .post-title a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 .post-excerpt {
-    font-size: 1rem;
-    color: #555;
-    line-height: 1.5;
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.5;
 }
 .post-meta {
-    font-size: 0.85rem;
-    color: #6c757d;
+  font-size: 0.85rem;
+  color: #6c757d;
 }
 .post-container {
-    border-bottom: 1px solid #e9ecef;
-    padding: 20px 0;
+  border-bottom: 1px solid #e9ecef;
+  padding: 20px 0;
 }
 .post-container:hover {
-    background-color: #f1f3f5;
+  background-color: #f1f3f5;
 }
 .post-image {
-    display: block;
-    margin: 0 auto;
-    max-height: 500px;
-    object-fit: cover;
+  display: block;
+  margin: 0 auto;
+  max-height: 500px;
+  object-fit: cover;
 }
 .black-on-hover {
-    transition: color 0.3s ease, transform 0.3s ease;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 .black-on-hover:hover {
-    color: black;
-    transform: scale(1.2);
+  color: black;
+  transform: scale(1.2);
 }
 @media (max-width: 768px) {
-    .post-image {
-        margin: 0;
-    }
+  .post-image {
+    margin: 0;
+  }
 }
 .markdown-content img {
-    display: block;
-    margin: 1rem auto;
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
+  display: block;
+  margin: 1rem auto;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
 }
 @media (max-width: 768px) {
-    .markdown-content img {
-        margin: 0.5rem 0;
-    }
+  .markdown-content img {
+    margin: 0.5rem 0;
+  }
 }
 .profile-pic {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
 }
 .post-list {
-    max-height: 300px;
-    overflow-y: auto;
+  max-height: 300px;
+  overflow-y: auto;
 }
 .post-item {
-    transition: background-color 0.5s;
+  transition: background-color 0.5s;
 }
 .post-item:hover {
-    background-color: #f8f9fa;
+  background-color: #f8f9fa;
 }
 .sidebar {
-    background-color: #f8f9fa;
-    padding: 1.5rem;
+  background-color: #f8f9fa;
+  padding: 1.5rem;
 }
 .sidebar h3 {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
 }
 .sidebar-item {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 .sidebar-item:hover {
-    background-color: #ecedef;
+  background-color: #ecedef;
 }
 .sidebar-item a {
-    color: #495057;
-    text-decoration: none;
+  color: #495057;
+  text-decoration: none;
 }
 .sidebar-item a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
+}
+.comment-container {
+  margin-bottom: 1.5rem;
+}
+.comment-body {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+}
+.reply {
+  margin-left: 2rem;
+  margin-top: 1rem;
+}
+.comment-meta {
+  font-size: 0.9rem;
+}
+.reply-btn {
+  font-size: 0.85rem;
+  color: #6c757d;
+  text-decoration: none;
+}
+.reply-btn:hover {
+  color: #007bff;
+}
+.reply-form-container {
+  display: none;
+  margin-top: 1rem;
 }

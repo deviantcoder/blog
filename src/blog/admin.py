@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from mptt.admin import MPTTModelAdmin
-from .models import Post, Comment
+from .models import Post, Comment, Upvote
 
 
 @admin.register(Post)
@@ -18,3 +18,11 @@ class CommentAdmin(MPTTModelAdmin):
 
     def body(self, obj):
         return obj.body[:50]
+
+
+@admin.register(Upvote)
+class UpvoteAdmin(admin.ModelAdmin):
+    list_display = ('profile', 'post', 'created')
+
+    def post(self, obj):
+        return obj.post.title[:50]

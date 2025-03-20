@@ -133,3 +133,20 @@ class Comment(MPTTModel):
 
     def __str__(self):
         return f'{self.author.display_name}: {self.body[:50]}'
+    
+
+class Upvote(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='upvotes')
+    profile = models.ForeignKey(
+        settings.PROFILE_USER_MODEL, on_delete=models.SET_NULL, related_name='upvotes', null=True
+    )
+
+    created = models.DateTimeField(auto_now_add=True)
+    id = models.UUIDField(default=uuid4, editable=False, unique=True, primary_key=True)
+
+    class Meta:
+        unique_together = ('post', 'profile')
+        ordering = ('-created',)
+
+    def __str__(self):
+        return f'{self.profile.display_name}: {self.post.title[:50]}'

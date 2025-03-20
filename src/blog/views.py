@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .models import Post, Comment
+from .models import Post, Comment, Upvote
 from .forms import PostForm
 from .documents import PostDocument
 
@@ -153,3 +153,21 @@ def create_comment(request, slug):
             messages.warning(request, 'Comment cannot be empty')
         
         return redirect('blog:view_post', slug)
+
+
+@login_required(login_url='accounts:login')
+def upvote_post(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    profile = request.user.profile
+
+    if post.upvotes.filter(profile=profile).exists():
+        post.upvotes.get(profile=profile).delete()
+        messages.success(request, 'Upvote removed')
+    else:
+        Upvote.objects.create(
+            post=post,
+            profile=profile
+        )
+        messages.success(request, 'Post upvoted')
+
+    return redirect('blog:view_post', slug)

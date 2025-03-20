@@ -9,15 +9,6 @@
 {% endblock title %}
 
 {% block content %}
-<style>
-    .comment-container { margin-bottom: 1.5rem; }
-    .comment-body { background-color: #f8f9fa; padding: 1rem; border-radius: 8px; }
-    .reply { margin-left: 2rem; margin-top: 1rem; }
-    .comment-meta { font-size: 0.9rem; }
-    .reply-btn { font-size: 0.85rem; color: #6c757d; text-decoration: none; }
-    .reply-btn:hover { color: #007bff; }
-    .reply-form-container { display: none; margin-top: 1rem; }
-</style>
 
 <div class="container my-5" style="max-width: 800px;">
     <div class="row justify-content-center">
@@ -26,41 +17,31 @@
                 <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-dark rounded-0">Edit</a>
                 <a href="{% url 'blog:delete_post' post.slug %}" class="btn btn-danger rounded-0">Delete</a>
             {% endif %}
-
             <h1 class="fw-bold mb-3">{{ post.title }}</h1>
-
             <p class="text-muted small mb-4">
                 {{ post.author.display_name }} · {{ post.get_created }}
             </p>
-
             <div class="d-flex align-items-center gap-3 mb-3">
-
                 <div class="d-flex align-items-center">
-                    <button class="btn btn-link p-0 text-muted black-on-hover" style="line-height: 1;">
+                    <a href="{% url 'blog:upvote_post' post.slug %}" class="btn btn-link p-0 text-muted black-on-hover" style="line-height: 1;">
                         <i class="bi bi-heart-fill" style="font-size: 1.2rem;"></i>
-                    </button>
-                    <span class="text-muted small ms-1">42</span>
+                    </a>
+                    <span class="text-muted small ms-1">{{ post.upvotes.count }}</span>
                 </div>
-
                 <div class="d-flex align-items-center">
                     <button class="btn btn-link p-0 text-muted black-on-hover" style="line-height: 1;">
                         <i class="bi bi-chat-fill" style="font-size: 1.2rem;"></i>
                     </button>
-                    <span class="text-muted small ms-1">13</span>
+                    <span class="text-muted small ms-1">{{ post.comments.count }}</span>
                 </div>
-
             </div>
-
             <hr>
-
             {% if post.header_image %}
                 <img src="{{ post.header_image.url }}" alt="Post Image" class="post-image mb-4 img-fluid rounded">
             {% endif %}
-
             <div class="fs-5 text-dark markdown-content">
                 {{ post.content|markdown }}
             </div>
-
             <div class="mt-5">
                 <div class="comment-form mt-4">
                     <h3 class="fw-semibold mb-3">Leave a Comment</h3>
@@ -79,7 +60,6 @@
                         </p>
                     {% endif %}
                 </div>
-
                 {% recursetree post.comments.all %}
                     <div class="comment-container {% if node.level > 0 %}reply{% endif %}">
                         <div class="comment-body">
@@ -91,7 +71,6 @@
                                 <a href="#" class="reply-btn" data-comment-id="{{ node.id }}">Reply</a>
                             {% endif %}
                         </div>
-
                         {% if request.user.is_authenticated %}
                             <div class="reply-form-container" id="reply-form-{{ node.id }}">
                                 <form method="post" action="{% url 'blog:create_comment' post.slug %}" class="mb-3">
@@ -105,15 +84,12 @@
                                 </form>
                             </div>
                         {% endif %}
-
                         {{ children }}
                     </div>
                 {% endrecursetree %}
-
                 {% if not post.comments.exists %}
                     <p class="text-muted">No comments yet. Be the first to comment!</p>
                 {% endif %}
-
             </div>
         </div>
     </div>

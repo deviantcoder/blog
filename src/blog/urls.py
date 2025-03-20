@@ -14,4 +14,6 @@ urlpatterns = [
     path('search/', views.search, name='search'),
 
     path('create-comment/<str:slug>/', views.create_comment, name='create_comment'),
+
+    path('upvote/<str:slug>/', views.upvote_post, name='upvote_post'),
 ]
