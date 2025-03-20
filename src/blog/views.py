@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .models import Post
+from .models import Post, Comment
 from .forms import PostForm
 from .documents import PostDocument
 
@@ -120,6 +120,7 @@ def search(request):
     post_queryset = Post.objects.filter(id__in=post_ids).order_by('-created') if post_ids else Post.objects.none()
 
     context = {
+        'title': 'Search',
         'search_query': query or 'Search',
         'posts': post_queryset,
         'query': query,
@@ -127,3 +128,28 @@ def search(request):
     }
 
     return render(request, 'blog/search.html', context)
+
+
+@login_required(login_url='accounts:login')
+def create_comment(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+
+    if request.method == 'POST':
+        body = request.POST.get('body', '')
+        parent_id = request.POST.get('parent_id', None)
+
+        if body:
+            parent = Comment.objects.get(id=parent_id) if parent_id else None
+
+            Comment.objects.create(
+                author=request.user.profile,
+                post=post,
+                body=body,
+                parent=parent,
+            )
+            
+            messages.success(request, 'Comment created')
+        else:
+            messages.warning(request, 'Comment cannot be empty')
+        
+        return redirect('blog:view_post', slug)

@@ -1,12 +1,24 @@
 {% extends 'base.html' %}
 
+{% load static %}
 {% load blog_tags %}
+{% load mptt_tags %}
 
 {% block title %}
     {{ title }}
 {% endblock title %}
 
 {% block content %}
+<style>
+    .comment-container { margin-bottom: 1.5rem; }
+    .comment-body { background-color: #f8f9fa; padding: 1rem; border-radius: 8px; }
+    .reply { margin-left: 2rem; margin-top: 1rem; }
+    .comment-meta { font-size: 0.9rem; }
+    .reply-btn { font-size: 0.85rem; color: #6c757d; text-decoration: none; }
+    .reply-btn:hover { color: #007bff; }
+    .reply-form-container { display: none; margin-top: 1rem; }
+</style>
+
 <div class="container my-5" style="max-width: 800px;">
     <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-12">
@@ -48,7 +60,65 @@
             <div class="fs-5 text-dark markdown-content">
                 {{ post.content|markdown }}
             </div>
+
+            <div class="mt-5">
+                <div class="comment-form mt-4">
+                    <h3 class="fw-semibold mb-3">Leave a Comment</h3>
+                    {% if request.user.is_authenticated %}
+                        <form method="post" action="{% url 'blog:create_comment' post.slug %}" class="mb-3">
+                            {% csrf_token %}
+                            <input type="hidden" name="parent_id" value="">
+                            <div class="mb-3">
+                                <textarea class="form-control rounded-3" name="body" placeholder="Write your comment..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-dark rounded-3 fw-semibold">Post Comment</button>
+                        </form>
+                    {% else %}
+                        <p class="text-muted">
+                            Please <a href="{% url 'accounts:login' %}">sign in</a> to leave a comment.
+                        </p>
+                    {% endif %}
+                </div>
+
+                {% recursetree post.comments.all %}
+                    <div class="comment-container {% if node.level > 0 %}reply{% endif %}">
+                        <div class="comment-body">
+                            <p class="comment-meta text-muted">
+                                {{ node.author.display_name }} · {{ node.created|date:"F d, Y" }}
+                            </p>
+                            <p>{{ node.body }}</p>
+                            {% if request.user.is_authenticated %}
+                                <a href="#" class="reply-btn" data-comment-id="{{ node.id }}">Reply</a>
+                            {% endif %}
+                        </div>
+
+                        {% if request.user.is_authenticated %}
+                            <div class="reply-form-container" id="reply-form-{{ node.id }}">
+                                <form method="post" action="{% url 'blog:create_comment' post.slug %}" class="mb-3">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="parent_id" value="{{ node.id }}">
+                                    <div class="mb-3">
+                                        <textarea class="form-control rounded-3" name="body" placeholder="Write your reply..." required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-dark rounded-3 fw-semibold">Post Reply</button>
+                                    <button type="button" class="btn btn-link text-muted ms-2 cancel-reply" data-comment-id="{{ node.id }}">Cancel</button>
+                                </form>
+                            </div>
+                        {% endif %}
+
+                        {{ children }}
+                    </div>
+                {% endrecursetree %}
+
+                {% if not post.comments.exists %}
+                    <p class="text-muted">No comments yet. Be the first to comment!</p>
+                {% endif %}
+
+            </div>
         </div>
     </div>
 </div>
+
+<script src="{% static 'js/comment_reply.js' %}"></script>
+
 {% endblock content %}

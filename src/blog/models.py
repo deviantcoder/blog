@@ -10,6 +10,8 @@ from django.core.validators import FileExtensionValidator
 from django.conf import settings
 from django.db import transaction
 
+from mptt.models import MPTTModel, TreeForeignKey
+
 from core.utils import validate_file_size, send_log, compress_image
 
 
@@ -109,3 +111,25 @@ class Post(models.Model):
     @property
     def get_created(self):
         return self.created.strftime('%B %d, %Y')
+
+
+class Comment(MPTTModel):
+    author = models.ForeignKey(
+        settings.PROFILE_USER_MODEL, on_delete=models.SET_NULL, related_name='comments', null=True
+    )
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    body = models.TextField(blank=True)
+
+    created = models.DateTimeField(auto_now_add=True)
+    id = models.UUIDField(default=uuid4, unique=True, editable=False, primary_key=True)
+
+    class Meta:
+        ordering = ('-created',)
+
+    class MPTTMeta:
+        order_insertion_by = ['post']
+
+    def __str__(self):
+        return f'{self.author.display_name}: {self.body[:50]}'
