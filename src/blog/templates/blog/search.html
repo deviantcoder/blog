@@ -28,7 +28,7 @@
                 <p class="text-muted">Enter a search term above.</p>
             {% endif %}
 
-            {% include 'includes/pagination.html' %}
+            {% include 'includes/pagination.html' with queryset=posts %}
         </div>
         <div class="col-lg-4">
             {% include 'blog/includes/recent_posts.html' %}

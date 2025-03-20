@@ -35,6 +35,6 @@ def plaintext_filter(text):
 def get_post_by_id(posts, post_id):
     try:
         post_uuid = uuid.UUID(post_id)
-        return posts.get(id=post_uuid)
+        return Post.objects.get(id=post_uuid)
     except (ValueError, Post.DoesNotExist):
         return Post.objects.filter(id=post_id).first()

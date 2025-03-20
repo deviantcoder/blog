@@ -7,4 +7,5 @@
 * Search (Elasticsearch)
 * Comments (MPTT)
 * Upvotes
-* Recent viewed posts (sessions)
+* Recently viewed posts (sessions)
+* Pagination

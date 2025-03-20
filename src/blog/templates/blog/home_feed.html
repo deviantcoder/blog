@@ -19,7 +19,7 @@
                     <p class="post-meta">{{ post.author.display_name }} · {{ post.get_created }}</p>
                 </div>
             {% endfor %}
-            {% include 'includes/pagination.html' %}
+            {% include 'includes/pagination.html' with queryset=posts %}
         </div>
         <div class="col-lg-4">
             {% include 'blog/includes/recent_posts.html' %}

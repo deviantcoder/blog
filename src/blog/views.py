@@ -6,14 +6,20 @@ from .models import Post, Comment, Upvote
 from .forms import PostForm
 from .documents import PostDocument
 
+from core.utils import paginate
+
 
 def home_feed_view(request):
     posts = Post.objects.filter(status='published').order_by('-created')
 
+    posts, custom_range, paginator = paginate(request, posts, per_page=1)
+
     context = {
         'title': 'Feed',
         'posts': posts,
-        'recent_posts': request.session.get('recent_posts', [])
+        'custom_range': custom_range,
+        'num_pages': paginator.num_pages,
+        'recent_posts': request.session.get('recent_posts', []),
     }
 
     return render(request, 'blog/home_feed.html', context)
@@ -119,10 +125,14 @@ def search(request):
 
     post_queryset = Post.objects.filter(id__in=post_ids).order_by('-created') if post_ids else Post.objects.none()
 
+    posts, custom_range, paginator = paginate(request, post_queryset, per_page=1)
+
     context = {
         'title': 'Search',
         'search_query': query or 'Search',
-        'posts': post_queryset,
+        'posts': posts,
+        'custom_range': custom_range,
+        'num_pages': paginator.num_pages,
         'query': query,
         'recent_posts': request.session.get('recent_posts', [])
     }

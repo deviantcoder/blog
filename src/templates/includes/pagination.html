@@ -1,8 +1,50 @@
-<nav aria-label="Page navigation" class="mt-5">
-    <ul class="pagination justify-content-center">
-        <li class="page-item disabled"><a class="page-link rounded-0" href="#">Previous</a></li>
-        <li class="page-item active"><a class="page-link bg-dark border-dark" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link rounded-0" href="#">Next</a></li>
-    </ul>
-</nav>
+{% if queryset.has_other_pages %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item {% if not queryset.has_previous %}disabled{% endif %}">
+                <a class="page-link rounded-0 text-dark" 
+                   href="{% if query %}?query={{ query }}&page=1{% else %}?page=1{% endif %}">
+                   &#10094;&#10094;
+                </a>
+            </li>
+            {% if queryset.has_previous %}
+                <li class="page-item">
+                    <a class="page-link rounded-0 text-dark" 
+                       href="{% if query %}?query={{ query }}&page={{ queryset.previous_page_number }}{% else %}?page={{ queryset.previous_page_number }}{% endif %}">
+                       &#10094;
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link rounded-0 text-dark">&#10094;</span>
+                </li>
+            {% endif %}
+            {% for page in custom_range %}
+                <li class="page-item {% if page == queryset.number %}active{% endif %}">
+                    <a class="page-link {% if page == queryset.number %}bg-dark border-dark text-light{% endif %}" 
+                       href="{% if query %}?query={{ query }}&page={{ page }}{% else %}?page={{ page }}{% endif %}">
+                        {{ page }}
+                    </a>
+                </li>
+            {% endfor %}
+            {% if queryset.has_next %}
+                <li class="page-item">
+                    <a class="page-link rounded-0 text-dark" 
+                       href="{% if query %}?query={{ query }}&page={{ queryset.next_page_number }}{% else %}?page={{ queryset.next_page_number }}{% endif %}">
+                       &#10095
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link rounded-0 text-dark">&#10095;</span>
+                </li>
+            {% endif %}
+            <li class="page-item {% if not queryset.has_next %}disabled{% endif %}">
+                <a class="page-link rounded-0 text-dark" 
+                   href="{% if query %}?query={{ query }}&page={{ num_pages }}{% else %}?page={{ num_pages }}{% endif %}">
+                   &#10095;&#10095;
+                </a>
+            </li>
+        </ul>
+    </nav>
+{% endif %}

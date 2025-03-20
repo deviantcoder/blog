@@ -6,6 +6,7 @@ from io import BytesIO
 from django.core.files import File
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
@@ -86,6 +87,10 @@ def send_verify_email(user):
 
 
 def send_log(logger: logging.Logger, message: str = None, level: str = 'info'):
+    """
+    Sends a log message to the specified logger at the given log level.
+    """
+
     LEVEL_MAP = {
         'debug': logging.DEBUG,
         'info': logging.INFO,
@@ -100,3 +105,27 @@ def send_log(logger: logging.Logger, message: str = None, level: str = 'info'):
         raise ValueError(f'Invalid log level: {level}')
 
     return logger.log(log_level, message)
+
+
+def paginate(request, objects, per_page=10):
+    """
+    Paginate a queryset or list of objects, returning 
+    the page and a custom range of page numbers.
+    """
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(objects, per_page)
+
+    try:
+        objects = paginator.page(page)
+    except PageNotAnInteger:
+        objects = paginator.page(1)
+    except EmptyPage:
+        objects = paginator.page(paginator.num_pages)
+
+    left_index = max(1, int(page) - 2)
+    right_index = min(paginator.num_pages + 1, int(page) + 3)
+
+    custom_range = range(left_index, right_index)
+
+    return objects, custom_range, paginator
