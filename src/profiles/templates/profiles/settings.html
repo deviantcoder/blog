@@ -42,30 +42,72 @@
 
             <div class="mb-5">
                 <h2 class="h4 fw-semibold mb-3">Published Posts</h2>
-                <div class="post-list border rounded-0 p-3">
-                    {% for post in published_posts %}
-                        <div class="post-item p-2">
-                            <a href="{% url 'blog:edit_post' post.slug %}" class="text-dark text-decoration-none">{{ post.title }}</a>
-                            <span class="text-muted small ms-2">· {{ post.created|date:"F d, Y" }}</span>
-                        </div>
-                    {% empty %}
-                        <p class="text-muted">No published posts yet.</p>
-                    {% endfor %}
+                <div class="post-list border rounded-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col" class="ps-3">Title</th>
+                                <th scope="col">Date</th>
+                                <th scope="col" class="text-end pe-3">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for post in published_posts %}
+                                <tr>
+                                    <td class="ps-3 align-middle">
+                                        <a href="{% url 'blog:view_post' post.slug %}" class="text-dark text-decoration-none">{{ post.title }}</a>
+                                    </td>
+                                    <td class="align-middle">
+                                        <span class="text-muted small">{{ post.created|date:"F d, Y" }}</span>
+                                    </td>
+                                    <td class="text-end pe-3 align-middle">
+                                        <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-sm btn-dark rounded-0 border-0 me-2">Edit</a>
+                                        <a href="{% url 'blog:delete_post' post.slug %}" class="btn btn-sm btn-danger rounded-0 border-0">Delete</a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-muted text-center py-3">No published posts yet.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
                 <p class="text-muted small mt-2">Total: {{ published_posts|length }} published post{{ published_posts|length|pluralize }}</p>
             </div>
 
             <div class="mb-5">
                 <h2 class="h4 fw-semibold mb-3">Drafts</h2>
-                <div class="post-list border rounded-0 p-3">
-                    {% for post in draft_posts %}
-                        <div class="post-item p-2">
-                            <a href="{% url 'blog:edit_post' post.slug %}" class="text-dark text-decoration-none">{{ post.title }}</a>
-                            <span class="text-muted small ms-2">· {{ post.created|date:"F d, Y" }}</span>
-                        </div>
-                    {% empty %}
-                        <p class="text-muted">No drafts yet.</p>
-                    {% endfor %}
+                <div class="post-list border rounded-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col" class="ps-3">Title</th>
+                                <th scope="col">Date</th>
+                                <th scope="col" class="text-end pe-3">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for post in draft_posts %}
+                                <tr>
+                                    <td class="ps-3 align-middle">
+                                        <a href="{% url 'blog:edit_post' post.slug %}" class="text-dark text-decoration-none">{{ post.title }}</a>
+                                    </td>
+                                    <td class="align-middle">
+                                        <span class="text-muted small">{{ post.created|date:"F d, Y" }}</span>
+                                    </td>
+                                    <td class="text-end pe-3 align-middle">
+                                        <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-sm btn-dark rounded-0 border-0 me-2">Edit</a>
+                                        <a href="{% url 'blog:delete_post' post.slug %}" class="btn btn-sm btn-danger rounded-0 border-0">Delete</a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-muted text-center py-3">No drafts yet.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
                 <p class="text-muted small mt-2">Total: {{ draft_posts|length }} draft{{ draft_posts|length|pluralize }}</p>
             </div>

@@ -2,6 +2,7 @@
 
 <div class="sidebar">
     <h3>Recently Viewed Posts</h3>
+    <hr>
     {% for post_id in recent_posts %}
         {% with post=posts|get_post_by_id:post_id %}
             {% if post %}

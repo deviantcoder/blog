@@ -50,9 +50,9 @@
                             {% csrf_token %}
                             <input type="hidden" name="parent_id" value="">
                             <div class="mb-3">
-                                <textarea class="form-control rounded-3" name="body" placeholder="Write your comment..." required></textarea>
+                                <textarea class="form-control rounded-0" name="body" placeholder="Write your comment..." required></textarea>
                             </div>
-                            <button type="submit" class="btn btn-dark rounded-3 fw-semibold">Post Comment</button>
+                            <button type="submit" class="btn btn-dark rounded-0 border-0 fw-semibold">Post Comment</button>
                         </form>
                     {% else %}
                         <p class="text-muted">

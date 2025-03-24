@@ -12,7 +12,7 @@ from core.utils import paginate
 def home_feed_view(request):
     posts = Post.objects.filter(status='published').order_by('-created')
 
-    posts, custom_range, paginator = paginate(request, posts, per_page=1)
+    posts, custom_range, paginator = paginate(request, posts, per_page=5)
 
     context = {
         'title': 'Feed',
@@ -34,7 +34,7 @@ def view_post(request, slug):
 
         if post_id not in recent_posts:
             recent_posts.append(post_id)
-            request.session['recent_posts'] = recent_posts[:5]
+            request.session['recent_posts'] = recent_posts[:10]
 
     context = {
         'title': post.title,
@@ -125,7 +125,7 @@ def search(request):
 
     post_queryset = Post.objects.filter(id__in=post_ids).order_by('-created') if post_ids else Post.objects.none()
 
-    posts, custom_range, paginator = paginate(request, post_queryset, per_page=1)
+    posts, custom_range, paginator = paginate(request, post_queryset, per_page=5)
 
     context = {
         'title': 'Search',
