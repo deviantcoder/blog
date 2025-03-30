@@ -40,7 +40,7 @@ class PostForm(forms.ModelForm):
                     css_class='col-md-6 mb-2'
                 ),
                 Column(
-                    HTML("<a href='' class='btn btn-outline-dark rounded-0 fw-semibold w-100'>Save as Draft</a>"),
+                    HTML("<button type='submit' name='save_draft' class='btn btn-outline-dark rounded-0 fw-semibold w-100'>Save as Draft</button>"),
                     css_class='col-md-6 mb-2'
                 ),
                 css_class='justify-content-center'

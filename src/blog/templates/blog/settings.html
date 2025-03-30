@@ -97,9 +97,16 @@
                                         <span class="text-muted small">{{ post.created|date:"F d, Y" }}</span>
                                     </td>
                                     <td class="text-end pe-3 align-middle">
-                                        <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-sm btn-dark rounded-0 border-0 me-2">Edit</a>
-                                        <a href="{% url 'blog:delete_post' post.slug %}" class="btn btn-sm btn-danger rounded-0 border-0">Delete</a>
-                                    </td>
+                                        <div class="d-flex align-items-center justify-content-end">
+                                            <form method="post" action="{% url 'blog:publish_draft' %}" class="me-2">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="post_id" value="{{ post.id }}" id="post_id">
+                                                <button type="submit" name="update_username" class="btn btn-sm btn-dark rounded-0 border-0">Publish</button>
+                                            </form>
+                                            <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-sm btn-dark rounded-0 border-0 me-2">Edit</a>
+                                            <a href="{% url 'blog:delete_post' post.slug %}" class="btn btn-sm btn-danger rounded-0 border-0">Delete</a>
+                                        </div>
+                                    </td>                                    
                                 </tr>
                             {% empty %}
                                 <tr>

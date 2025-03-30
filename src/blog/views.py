@@ -54,9 +54,12 @@ def create_post(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user.profile
-            post.status = 'published'
+            if not 'save_draft' in request.POST:
+                post.status = 'published'
+                messages.success(request, 'Post created')
+            else:
+                messages.success(request, 'Draft Post created')
             post.save()
-            messages.success(request, 'Post created')
             return redirect('blog:view_post', post.slug)
     else:
         form = PostForm()
@@ -224,3 +227,21 @@ def settings(request):
     }
 
     return render(request, 'blog/settings.html', context)
+
+
+@login_required(login_url='accounts:login')
+def publish_draft(request):
+    if request.method == 'POST':
+        post_id = request.POST.get('post_id') or None
+        post = get_object_or_404(Post, id=post_id)
+
+        if post.status == 'draft':
+            post.status = 'published'
+
+        post.save()
+
+        messages.success(request, f'Published draft: {request.POST.get('post_id')}')
+        
+        return redirect('blog:settings')
+
+    return redirect('blog:settings')
