@@ -21,7 +21,7 @@
                             <img src="{{ request.user.profile.image.url|default:'/media/defaults/def.png' }}" alt="Img" class="rounded-circle" width="35" height="35">
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="{% url 'profiles:settings' %}">Settings</a>
+                            <a class="dropdown-item" href="{% url 'blog:settings' %}">Settings</a>
                         </div>
                     </div>                    
                 {% else %}

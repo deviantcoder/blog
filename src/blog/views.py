@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
 from django.contrib import messages
 
 from .models import Post, Comment, Upvote
@@ -7,6 +8,9 @@ from .forms import PostForm
 from .documents import PostDocument
 
 from core.utils import paginate
+
+
+User = get_user_model()
 
 
 def home_feed_view(request):
@@ -181,3 +185,42 @@ def upvote_post(request, slug):
         messages.success(request, 'Post upvoted')
 
     return redirect('blog:view_post', slug)
+
+
+@login_required(login_url='accounts:login')
+def settings(request):
+    user = request.user
+    if request.method == 'POST':
+        if 'update_username' in request.POST:
+            new_username = request.POST.get('username')
+
+            if not new_username:
+                messages.warning(request, 'Username cannot be empty')
+            elif new_username == user.username:
+                messages.warning(request, 'This is already your username')
+            elif User.objects.filter(username=new_username).exists():
+                messages.warning(request, 'This username is already taken')
+            else:
+                user.username = new_username
+                user.save()
+                messages.success(request, 'Username updated')
+
+            return redirect('blog:settings')
+    
+        if 'update_image' in request.POST:
+            new_image = request.FILES.get('image')
+
+            if new_image:
+                user.profile.image = new_image
+                user.profile.save()
+                messages.success(request, 'Profile picture updated')
+
+            return redirect('blog:settings')
+
+    context = {
+        'title': 'Settings',
+        'published_posts': Post.objects.filter(author=request.user.profile, status='published'),
+        'draft_posts': Post.objects.filter(author=request.user.profile, status='draft'),
+    }
+
+    return render(request, 'blog/settings.html', context)
