@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% load blog_tags %}
+
+{% block title %}
+    {{ title }}
+{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card mb-4 border-0 rounded-0 shadow-lg">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <img src="{{ profile.image.url }}" alt="Profile" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+                        </div>
+                        <div class="col">
+                            <h1 class="h3 mb-1 fw-bold">{{ profile.display_name }}</h1>
+                            <div class="text-muted mb-2">@{{ profile.user.username }}</div>
+                            <p class="mb-0">Backend Programmer | Sharing thoughts on programming and life. Probably overthinking this bio right now.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex gap-4 mb-4 pb-3 border-bottom">
+                <div><span class="fw-bold">0</span> Following</div>
+                <div><span class="fw-bold">0</span> Followers</div>
+                <div><span class="fw-bold">{{ profile.posts.count }}</span> Posts</div>
+            </div>
+            <div class="mb-4">
+                <button class="btn btn-dark rounded-0 px-4">Follow</button>
+            </div>
+            <div class="mb-4">
+                <h2 class="h4 fw-bold mb-3 pb-2 border-bottom">Recent Articles</h2>
+                {% for post in posts %}
+                    <div class="post-container">
+                        <h2 class="post-title">
+                            <a href="{% url 'blog:view_post' post.slug %}">{{ post.title }}</a>
+                        </h2>
+                        <p class="post-excerpt">{{ post.content|plaintext|slice:200 }}...</p>
+                        <p class="post-meta">{{ post.author.display_name }} · {{ post.get_created }}</p>
+                        {% if post.tags.exists %}
+                            <div class="post-tags mt-2">
+                                {% for tag in post.tags.all %}
+                                    <span class="badge bg-secondary rounded-0 border-0">{{ tag.name }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div>
+                <button class="btn btn-outline-dark rounded-0 px-4">Show All</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
