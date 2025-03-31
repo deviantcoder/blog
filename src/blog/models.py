@@ -34,7 +34,8 @@ def upload_to(instance, filename):
 
 class Post(models.Model):
     """
-    Blog post model.
+    Post model represents a blog post with attributes such as author,
+    title, content, header image, status, and timestamps.
     """
 
     POST_STATUS = (
@@ -44,7 +45,7 @@ class Post(models.Model):
 
     author = models.ForeignKey(
         settings.PROFILE_USER_MODEL, on_delete=models.SET_NULL, related_name='posts', null=True
-        )
+    )
 
     title = models.CharField(max_length=100)
     content = models.TextField()
@@ -59,6 +60,8 @@ class Post(models.Model):
     )
 
     status = models.CharField(max_length=10, choices=POST_STATUS, default='draft')
+
+    tags = models.ManyToManyField('Tag', related_name='posts', blank=True)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -114,6 +117,10 @@ class Post(models.Model):
 
 
 class Comment(MPTTModel):
+    """
+    Represents a comment in a blog post, supporting threaded replies using MPTT.
+    """
+
     author = models.ForeignKey(
         settings.PROFILE_USER_MODEL, on_delete=models.SET_NULL, related_name='comments', null=True
     )
@@ -136,6 +143,10 @@ class Comment(MPTTModel):
     
 
 class Upvote(models.Model):
+    """
+    Represents an upvote on a blog post by a user profile.
+    """
+
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='upvotes')
     profile = models.ForeignKey(
         settings.PROFILE_USER_MODEL, on_delete=models.SET_NULL, related_name='upvotes', null=True
@@ -150,3 +161,26 @@ class Upvote(models.Model):
 
     def __str__(self):
         return f'{self.profile.display_name}: {self.post.title[:50]}'
+
+
+class Tag(models.Model):
+    """
+    Represents a Tag model used for categorizing/labeling content.
+    """
+
+    name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=50, unique=True)
+    created = models.DateTimeField(auto_now_add=True)
+    id = models.UUIDField(default=uuid4, unique=True, editable=False, primary_key=True)
+
+    class Meta:
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+
+        super().save(*args, **kwargs)

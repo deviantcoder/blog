@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.contrib import messages
+from django.http import JsonResponse
 
-from .models import Post, Comment, Upvote
+from .models import Post, Comment, Upvote, Tag
 from .forms import PostForm
 from .documents import PostDocument
 
@@ -54,12 +55,19 @@ def create_post(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user.profile
-            if not 'save_draft' in request.POST:
-                post.status = 'published'
-                messages.success(request, 'Post created')
-            else:
-                messages.success(request, 'Draft Post created')
+            post.status = 'draft' if 'save_draft' in request.POST else 'published'
             post.save()
+
+            tags_input = form.cleaned_data['tags']
+
+            if tags_input:
+                tag_names = [name.strip() for name in tags_input.split(',') if name.strip()][:5]
+                for tag_name in tag_names:
+                    tag, created = Tag.objects.get_or_create(name=tag_name.lower())
+                    post.tags.add(tag)
+
+            messages.success(request, f'Post {'saved as draft' if post.status == 'draft' else 'published'}')
+
             return redirect('blog:view_post', post.slug)
     else:
         form = PostForm()
@@ -80,8 +88,21 @@ def edit_post(request, slug):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Post updated')
+            post = form.save(commit=False)
+            post.status = 'draft' if 'save_draft' in request.POST else 'published'
+            post.save()
+
+            post.tags.clear()
+            tags_input = form.cleaned_data['tags']
+
+            if tags_input:
+                tag_names = [name.strip() for name in tags_input.split(',') if name.strip()][:5]
+                for tag_name in tag_names:
+                    tag, created = Tag.objects.get_or_create(name=tag_name.lower())
+                    post.tags.add(tag)
+
+            messages.success(request, f'Post {'saved as draft' if post.status == 'draft' else 'published'}')
+            
             return redirect('blog:view_post', post.slug)
     else:
         form = PostForm(instance=post)
@@ -245,3 +266,14 @@ def publish_draft(request):
         return redirect('blog:settings')
 
     return redirect('blog:settings')
+
+
+def tag_search(request):
+    query = request.GET.get('q', '').strip()
+
+    if query:
+        tags = Tag.objects.filter(name__icontains=query)[:10]
+    else:
+        tags = Tag.objects.all()[:10]
+
+    return JsonResponse([{'id': tag.name, 'text': tag.name} for tag in tags], safe=False)

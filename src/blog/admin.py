@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from mptt.admin import MPTTModelAdmin
-from .models import Post, Comment, Upvote
+from .models import Post, Comment, Upvote, Tag
 
 
 @admin.register(Post)
@@ -26,3 +26,11 @@ class UpvoteAdmin(admin.ModelAdmin):
 
     def post(self, obj):
         return obj.post.title[:50]
+    
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('name', 'created')
+
+    def get_prepopulated_fields(self, request, obj=None):
+        return {'slug': ('name',)}

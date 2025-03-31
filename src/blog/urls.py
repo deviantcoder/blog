@@ -18,4 +18,6 @@ urlpatterns = [
 
     path('settings/', views.settings, name='settings'),
     path('publish-draft/', views.publish_draft, name='publish_draft'),
+
+    path('tags/search/', views.tag_search, name='tag_search'),
 ]
