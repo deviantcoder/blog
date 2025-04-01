@@ -5,17 +5,37 @@
 {% endblock title %}
 
 {% block content %}
-<div class="d-flex justify-content-center align-items-center mt-5 mb-5">
-    <div class="card shadow-lg p-4 border-0 rounded-0" style="width: 35rem;">
-        <div class="card-body text-center">
-            <h3 class="card-title mb-3 fw-bold">Are you sure you want to <span class="text-danger">delete</span> post?</h3>
-            <span>"{{ post.title }}"</span>
-            <hr>
-            <form method="post" action="{% url 'blog:delete_post' post.slug %}">
-                {% csrf_token %}
-                <button class="btn btn-danger rounded-0">Delete</button>
-                <button class="btn btn-dark rounded-0">Back</button>
-            </form>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <div class="card border-0 shadow-lg overflow-hidden">
+                <div class="bg-light-danger py-3 px-4 border-bottom">
+                    <div class="d-flex justify-content-center">
+                        <i class="bi bi-exclamation-triangle-fill fs-1 text-danger"></i>
+                    </div>
+                </div>
+                <div class="card-body p-4 text-center">
+                    <h3 class="card-title mb-3 fw-bold">Delete Post Confirmation</h3>
+                    <p class="text-muted mb-4">This action cannot be undone. All content will be permanently removed.</p>
+                    
+                    <div class="alert alert-light-danger border-danger mb-4 py-3 px-4 text-start">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-file-earmark-text text-danger me-2"></i>
+                            <span class="fw-semibold">Post to be deleted:</span>
+                        </div>
+                        <p class="mb-0 mt-2 ps-4">"{{ post.title }}"</p>
+                    </div>
+                    <form method="post" action="{% url 'blog:delete_post' post.slug %}" class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+                        {% csrf_token %}
+                        <button type="button" onclick="window.history.back()" class="btn btn-outline-dark rounded-pill px-4 flex-grow-1 flex-sm-grow-0">
+                            <i class="bi bi-arrow-left me-2"></i> Cancel
+                        </button>
+                        <button type="submit" class="btn btn-danger rounded-pill px-4 flex-grow-1 flex-sm-grow-0">
+                            <i class="bi bi-trash3 me-2"></i> Delete Permanently
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>

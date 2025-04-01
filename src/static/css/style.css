@@ -172,3 +172,58 @@ body {
 .dropdown-item:hover {
   background-color: #e1eaf2;
 }
+.EasyMDEContainer .CodeMirror {
+  border: none !important;
+  background-color: #f8f9fa !important;
+  border-radius: 8px !important;
+  padding: 16px !important;
+  min-height: 300px;
+}
+.EasyMDEContainer .CodeMirror-focused {
+  background-color: #f8f9fa !important;
+  box-shadow: none !important;
+}
+.EasyMDEContainer .editor-toolbar {
+  border: none !important;
+  background-color: transparent !important;
+  padding: 0 0 8px 0 !important;
+}
+.image-upload-container {
+  background-color: #f8f9fa;
+  transition: all 0.2s ease;
+}
+.image-upload-container:hover {
+  background-color: #e9ecef;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+#id_header_image {
+  display: none;
+}
+.markdown-content {
+  line-height: 1.2;
+}
+.markdown-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+.markdown-content pre {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+.markdown-content code {
+  border-radius: 5px;
+}
+.hover-danger:hover {
+  color: #dc3545 !important;
+}
+.hover-primary:hover {
+  color: #0d6efd !important;
+}
+.border-start {
+  border-left: 3px solid #dee2e6 !important;
+}

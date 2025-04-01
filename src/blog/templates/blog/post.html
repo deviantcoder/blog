@@ -4,104 +4,181 @@
 {% load blog_tags %}
 {% load mptt_tags %}
 
-{% block title %}
-    {{ title }}
-{% endblock title %}
+{% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-
-<div class="container my-5" style="max-width: 800px;">
+<div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-12 col-md-10 col-lg-12">
-            {% if request.user.profile == post.author %}
-                <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-dark rounded-0">Edit</a>
-                <a href="{% url 'blog:delete_post' post.slug %}" class="btn btn-danger rounded-0">Delete</a>
-            {% endif %}
-            <h1 class="fw-bold mb-3">{{ post.title }}</h1>
-            <p class="text-muted small mb-4">
-                {{ post.author.display_name }} · {{ post.get_created }}
-            </p>
-            <div class="d-flex align-items-center gap-3 mb-3">
-                <div class="d-flex align-items-center">
-                    <a href="{% url 'blog:upvote_post' post.slug %}" class="btn btn-link p-0 text-muted black-on-hover" style="line-height: 1;">
-                        <i class="bi bi-heart-fill" style="font-size: 1.2rem;"></i>
+        <div class="col-lg-8">
+            <div class="mb-4">
+                {% if request.user.profile == post.author %}
+                <div class="d-flex gap-2 mb-4">
+                    <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-outline-dark rounded-pill px-3">
+                        <i class="bi bi-pencil me-2"></i>Edit
                     </a>
-                    <span class="text-muted small ms-1">{{ post.upvotes.count }}</span>
+                    <a href="{% url 'blog:delete_post' post.slug %}" class="btn btn-outline-danger rounded-pill px-3">
+                        <i class="bi bi-trash me-2"></i>Delete
+                    </a>
                 </div>
-                <div class="d-flex align-items-center">
-                    <button class="btn btn-link p-0 text-muted black-on-hover" style="line-height: 1;">
-                        <i class="bi bi-chat-fill" style="font-size: 1.2rem;"></i>
-                    </button>
-                    <span class="text-muted small ms-1">{{ post.comments.count }}</span>
+                {% endif %}
+                <h1 class="fw-bold mb-3 display-5">{{ post.title }}</h1>
+                <div class="d-flex align-items-center gap-4 mb-4">
+                    <div class="d-flex align-items-center">
+                        <img src="{{ post.author.image.url|default:'/media/defaults/def.png' }}" 
+                             alt="{{ post.author.display_name }}" 
+                             class="rounded-circle me-2" 
+                             width="40" height="40">
+                        <div>
+                            <p class="mb-0 fw-semibold">{{ post.author.display_name }}</p>
+                            <p class="text-muted small mb-0">
+                                <i class="bi bi-clock"></i> {{ post.get_created }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="d-flex align-items-center">
+                            <a href="{% url 'blog:upvote_post' post.slug %}" 
+                               class="btn btn-link p-0 text-muted hover-danger">
+                                <i class="bi bi-heart-fill fs-5"></i>
+                            </a>
+                            <span class="text-muted small ms-1">{{ post.upvotes.count }}</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-link p-0 text-muted hover-primary">
+                                <i class="bi bi-chat-fill fs-5"></i>
+                            </button>
+                            <span class="text-muted small ms-1">{{ post.comments.count }}</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            {% if post.tags.exists %}
-                <div class="post-tags mt-2">
+                {% if post.tags.exists %}
+                <div class="d-flex flex-wrap gap-2 mb-4">
                     {% for tag in post.tags.all %}
-                        <span class="badge bg-secondary rounded-0 border-0">{{ tag.name }}</span>
+                    <a href="#" class="badge bg-light text-dark text-decoration-none rounded-pill px-3 py-2">
+                        <i class="bi bi-tag me-1"></i> {{ tag.name }}
+                    </a>
                     {% endfor %}
                 </div>
-            {% endif %}
-            <hr>
-            {% if post.header_image %}
-                <img src="{{ post.header_image.url }}" alt="Post Image" class="post-image mb-4 img-fluid rounded">
-            {% endif %}
-            <div class="fs-5 text-dark markdown-content">
-                {{ post.content|markdown }}
+                {% endif %}
             </div>
-            <div class="mt-5">
-                <div class="comment-form mt-4">
-                    <h3 class="fw-semibold mb-3">Leave a Comment</h3>
-                    {% if request.user.is_authenticated %}
-                        <form method="post" action="{% url 'blog:create_comment' post.slug %}" class="mb-3">
+            <article class="mb-5">
+                {% if post.header_image %}
+                <img src="{{ post.header_image.url }}" 
+                     alt="{{ post.title }}" 
+                     class="img-fluid rounded-3 mb-4 w-100" 
+                     style="max-height: 400px; object-fit: cover;">
+                {% endif %}
+                <div class="fs-5 lh-base markdown-content">
+                    {{ post.content|markdown }}
+                </div>
+            </article>
+            <div class="border-top pt-5">
+                <h2 class="h4 fw-bold mb-4 d-flex align-items-center">
+                    <i class="bi bi-chat-square-text me-2"></i>
+                    Comments
+                    <span class="badge bg-primary rounded-pill ms-2">{{ post.comments.count }}</span>
+                </h2>
+                <div class="card border-0 shadow-sm mb-5">
+                    <div class="card-body">
+                        {% if request.user.is_authenticated %}
+                        <form method="post" action="{% url 'blog:create_comment' post.slug %}">
                             {% csrf_token %}
                             <input type="hidden" name="parent_id" value="">
                             <div class="mb-3">
-                                <textarea class="form-control rounded-0" name="body" placeholder="Write your comment..." required></textarea>
+                                <textarea class="form-control rounded-3" 
+                                          name="body" 
+                                          rows="3" 
+                                          placeholder="Write your comment..." 
+                                          required></textarea>
                             </div>
-                            <button type="submit" class="btn btn-dark rounded-0 border-0 fw-semibold">Post Comment</button>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">
+                                <i class="bi bi-send me-2"></i>Post Comment
+                            </button>
                         </form>
-                    {% else %}
-                        <p class="text-muted">
-                            Please <a href="{% url 'accounts:login' %}">sign in</a> to leave a comment.
-                        </p>
+                        {% else %}
+                        <div class="alert alert-light border">
+                            <p class="mb-0">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Please <a href="{% url 'accounts:login' %}" class="text-decoration-none">sign in</a> to leave a comment.
+                            </p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="comments-list">
+                    {% recursetree post.comments.all %}
+                    <div class="comment mb-4 {% if node.level > 0 %}ps-4 border-start{% endif %}" 
+                         id="comment-{{ node.id }}">
+                        <div class="d-flex gap-3">
+                            <img src="{{ node.author.image.url|default:'/media/defaults/def.png' }}" 
+                                 alt="{{ node.author.display_name }}" 
+                                 class="rounded-circle flex-shrink-0" 
+                                 width="40" height="40">
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <span class="fw-semibold">{{ node.author.display_name }}</span>
+                                        <span class="text-muted small ms-2">
+                                            <i class="bi bi-clock"></i> {{ node.created|timesince }} ago
+                                        </span>
+                                    </div>
+                                    {% if request.user.is_authenticated %}
+                                    <button class="btn btn-link p-0 text-muted reply-btn" 
+                                            data-comment-id="{{ node.id }}">
+                                        <i class="bi bi-reply"></i> Reply
+                                    </button>
+                                    {% endif %}
+                                </div>
+                                <div class="comment-body mb-2">
+                                    {{ node.body|linebreaks }}
+                                </div>
+                                
+                                {% if request.user.is_authenticated %}
+                                <div class="reply-form collapse" id="reply-form-{{ node.id }}">
+                                    <form method="post" action="{% url 'blog:create_comment' post.slug %}" 
+                                          class="mt-3 bg-light p-3 rounded-3">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="parent_id" value="{{ node.id }}">
+                                        <div class="mb-3">
+                                            <textarea class="form-control rounded-3" 
+                                                      name="body" 
+                                                      rows="2" 
+                                                      placeholder="Write your reply..." 
+                                                      required></textarea>
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3">
+                                                <i class="bi bi-send me-1"></i> Post Reply
+                                            </button>
+                                            <button type="button" 
+                                                    class="btn btn-outline-secondary btn-sm rounded-pill px-3 cancel-reply" 
+                                                    data-comment-id="{{ node.id }}">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if not node.is_leaf_node %}
+                        <div class="replies mt-4">
+                            {{ children }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endrecursetree %}
+                    {% if not post.comments.exists %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-chat-square-text text-muted" style="font-size: 2.5rem;"></i>
+                        <p class="text-muted mt-3">No comments yet. Be the first to comment!</p>
+                    </div>
                     {% endif %}
                 </div>
-                {% recursetree post.comments.all %}
-                    <div class="comment-container {% if node.level > 0 %}reply{% endif %}">
-                        <div class="comment-body">
-                            <p class="comment-meta text-muted">
-                                {{ node.author.display_name }} · {{ node.created|date:"F d, Y" }}
-                            </p>
-                            <p>{{ node.body }}</p>
-                            {% if request.user.is_authenticated %}
-                                <a href="#" class="reply-btn" data-comment-id="{{ node.id }}">Reply</a>
-                            {% endif %}
-                        </div>
-                        {% if request.user.is_authenticated %}
-                            <div class="reply-form-container" id="reply-form-{{ node.id }}">
-                                <form method="post" action="{% url 'blog:create_comment' post.slug %}" class="mb-3">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="parent_id" value="{{ node.id }}">
-                                    <div class="mb-3">
-                                        <textarea class="form-control rounded-3" name="body" placeholder="Write your reply..." required></textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-dark rounded-3 fw-semibold">Post Reply</button>
-                                    <button type="button" class="btn btn-link text-muted ms-2 cancel-reply" data-comment-id="{{ node.id }}">Cancel</button>
-                                </form>
-                            </div>
-                        {% endif %}
-                        {{ children }}
-                    </div>
-                {% endrecursetree %}
-                {% if not post.comments.exists %}
-                    <p class="text-muted">No comments yet. Be the first to comment!</p>
-                {% endif %}
             </div>
         </div>
     </div>
 </div>
 
 <script src="{% static 'js/comment_reply.js' %}"></script>
-
-{% endblock content %}
+{% endblock %}

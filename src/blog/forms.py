@@ -47,20 +47,5 @@ class PostForm(forms.ModelForm):
             ),
             Column(
                 Field('tags', css_class='form-control rounded-3 tag-input', placeholder='Add tags...'),
-                HTML('<div id="tag-container" class="tag-container"></div>'),
-                HTML('<input type="text" id="tag-input-field" class="tag-input-field" list="tag-suggestions" placeholder="Type a tag and press Enter...">'),
-                HTML('<datalist id="tag-suggestions"></datalist>'),
-                css_class='mb-3 text-start'
             ),
-            Row(
-                Column(
-                    Submit('submit', 'Publish', css_class='btn btn-dark rounded-0 fw-semibold w-100'),
-                    css_class='col-md-6 mb-2'
-                ),
-                Column(
-                    HTML("<button type='submit' name='save_draft' class='btn btn-outline-dark rounded-0 fw-semibold w-100'>Save as Draft</button>"),
-                    css_class='col-md-6 mb-2'
-                ),
-                css_class='justify-content-center'
-            )
         )

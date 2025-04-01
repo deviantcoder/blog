@@ -1,141 +1,231 @@
 {% extends 'base.html' %}
-
 {% load crispy_forms_tags %}
 
-{% block title %}
-    Settings
-{% endblock title %}
+{% block title %}Settings{% endblock %}
 
 {% block content %}
-
-<div class="container my-5" style="max-width: 800px;">
+<div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-12 col-md-10">
-            <h1 class="display-5 fw-bold mb-4">Settings</h1>
-
-            <div class="mb-5">
-                <h2 class="h4 fw-semibold mb-3">Account</h2>
-                <label for="email">Email</label>
-                <p class="text-muted mb-3">{{ user.email }}</p>
-                <form method="post" class="mb-3">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control rounded-0" id="username" name="username" value="{{ user.username }}" placeholder="Enter new username">
-                    </div>
-                    <button type="submit" name="update_username" class="btn btn-dark rounded-0 border-0 fw-semibold">Update Username</button>
-                </form>
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <h1 class="h2 fw-bold mb-0">
+                    <i class="bi bi-gear-fill me-2"></i>Account Settings
+                </h1>
+                <a href="{% url 'accounts:logout' %}" class="btn btn-outline-danger rounded-pill">
+                    <i class="bi bi-box-arrow-right me-2"></i>Log Out
+                </a>
             </div>
-
-            <div class="mb-5">
-                <h2 class="h4 fw-semibold mb-3">Profile Picture</h2>
-                <div class="d-flex align-items-center mb-3">
-                    <img src="{{ user.profile.image.url|default:'/media/defaults/def.png' }}" alt="Profile Picture" class="profile-pic me-3">
-                    <form method="post" enctype="multipart/form-data" class="d-inline" id="imageForm">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h2 class="h5 fw-bold mb-0">
+                        <i class="bi bi-person-circle me-2"></i>Account Information
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Email</label>
+                        <div class="d-flex align-items-center">
+                            <span class="text-muted">{{ user.email }}</span>
+                            <button class="btn btn-link p-0 ms-2" data-bs-toggle="tooltip" title="Contact support to change email">
+                                <i class="bi bi-info-circle text-muted"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <form method="post" class="border-top pt-4">
                         {% csrf_token %}
-                        <input type="file" name="image" class="d-none" id="imageInput" onchange="this.form.submit();">
-                        <button type="button" class="btn btn-outline-dark btn-sm" onclick="document.getElementById('imageInput').click();">Change Picture</button>
-                        <input type="hidden" name="update_image" value="true">
+                        <div class="mb-3">
+                            <label for="username" class="form-label fw-semibold">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-at"></i></span>
+                                <input type="text" class="form-control rounded-end" id="username" name="username" 
+                                       value="{{ user.username }}" placeholder="Enter new username">
+                            </div>
+                        </div>
+                        <button type="submit" name="update_username" class="btn btn-dark rounded-pill px-4">
+                            <i class="bi bi-check-circle me-2"></i>Update Username
+                        </button>
                     </form>
                 </div>
             </div>
-
-            <div class="mb-5">
-                <h2 class="h4 fw-semibold mb-3">Published Posts</h2>
-                <div class="post-list border rounded-0">
-                    <table class="table table-hover mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th scope="col" class="ps-3">Title</th>
-                                <th scope="col">Date</th>
-                                <th scope="col" class="text-end pe-3">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for post in published_posts %}
-                                <tr>
-                                    <td class="ps-3 align-middle">
-                                        <a href="{% url 'blog:view_post' post.slug %}" class="text-dark text-decoration-none">{{ post.title }}</a>
-                                    </td>
-                                    <td class="align-middle">
-                                        <span class="text-muted small">{{ post.created|date:"F d, Y" }}</span>
-                                    </td>
-                                    <td class="text-end pe-3 align-middle">
-                                        <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-sm btn-dark rounded-0 border-0 me-2">Edit</a>
-                                        <a href="{% url 'blog:delete_post' post.slug %}" class="btn btn-sm btn-danger rounded-0 border-0">Delete</a>
-                                    </td>
-                                </tr>
-                            {% empty %}
-                                <tr>
-                                    <td colspan="3" class="text-muted text-center py-3">No published posts yet.</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h2 class="h5 fw-bold mb-0">
+                        <i class="bi bi-image me-2"></i>Profile Picture
+                    </h2>
                 </div>
-                <p class="text-muted small mt-2">Total: {{ published_posts|length }} published post{{ published_posts|length|pluralize }}</p>
-            </div>
-
-            <div class="mb-5">
-                <h2 class="h4 fw-semibold mb-3">Drafts</h2>
-                <div class="post-list border rounded-0">
-                    <table class="table table-hover mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th scope="col" class="ps-3">Title</th>
-                                <th scope="col">Date</th>
-                                <th scope="col" class="text-end pe-3">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for post in draft_posts %}
-                                <tr>
-                                    <td class="ps-3 align-middle">
-                                        <a href="{% url 'blog:edit_post' post.slug %}" class="text-dark text-decoration-none">{{ post.title }}</a>
-                                    </td>
-                                    <td class="align-middle">
-                                        <span class="text-muted small">{{ post.created|date:"F d, Y" }}</span>
-                                    </td>
-                                    <td class="text-end pe-3 align-middle">
-                                        <div class="d-flex align-items-center justify-content-end">
-                                            <form method="post" action="{% url 'blog:publish_draft' %}" class="me-2">
-                                                {% csrf_token %}
-                                                <input type="hidden" name="post_id" value="{{ post.id }}" id="post_id">
-                                                <button type="submit" name="update_username" class="btn btn-sm btn-dark rounded-0 border-0">Publish</button>
-                                            </form>
-                                            <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-sm btn-dark rounded-0 border-0 me-2">Edit</a>
-                                            <a href="{% url 'blog:delete_post' post.slug %}" class="btn btn-sm btn-danger rounded-0 border-0">Delete</a>
-                                        </div>
-                                    </td>                                    
-                                </tr>
-                            {% empty %}
-                                <tr>
-                                    <td colspan="3" class="text-muted text-center py-3">No drafts yet.</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <p class="text-muted small mt-2">Total: {{ draft_posts|length }} draft{{ draft_posts|length|pluralize }}</p>
-            </div>
-            
-            <div class="mb-5">
-                <h2 class="h4 fw-semibold mb-3">Preferences</h2>
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="darkMode" name="dark_mode" {% if request.session.dark_mode %}checked{% endif %}>
-                        <label class="form-check-label" for="darkMode">Dark Mode</label>
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="position-relative me-4">
+                            <img src="{{ user.profile.image.url|default:'/media/defaults/def.png' }}" 
+                                 alt="Profile Picture" 
+                                 class="rounded-circle object-fit-cover" 
+                                 width="80" height="80">
+                            <span class="position-absolute bottom-0 end-0 bg-primary rounded-circle p-1 border border-2 border-white">
+                                <i class="bi bi-camera-fill text-white d-block" style="font-size: 0.8rem;"></i>
+                            </span>
+                        </div>
+                        <form method="post" enctype="multipart/form-data" class="d-inline" id="imageForm">
+                            {% csrf_token %}
+                            <input type="file" name="image" class="d-none" id="imageInput" accept="image/*" onchange="this.form.submit();">
+                            <button type="button" class="btn btn-outline-dark rounded-pill" onclick="document.getElementById('imageInput').click();">
+                                <i class="bi bi-upload me-2"></i>Change Picture
+                            </button>
+                            <input type="hidden" name="update_image" value="true">
+                        </form>
                     </div>
-                    <button type="submit" name="update_preferences" class="btn btn-dark rounded-0 border-0 fw-semibold mt-2">Save Preferences</button>
-                </form>
+                </div>
             </div>
-            <hr>
-            <div class="mb-5">
-                <a href="{% url 'accounts:logout' %}" class="btn btn-danger rounded-0 border-0 fw-semibold mt-2">Log Out</a>
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                    <h2 class="h5 fw-bold mb-0">
+                        <i class="bi bi-file-earmark-post me-2"></i>Published Posts
+                    </h2>
+                    <span class="badge bg-primary rounded-pill">{{ published_posts|length }}</span>
+                </div>
+                <div class="card-body p-0">
+                    {% if published_posts %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4">Title</th>
+                                    <th>Date</th>
+                                    <th class="pe-4 text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for post in published_posts %}
+                                <tr>
+                                    <td class="ps-4">
+                                        <a href="{% url 'blog:view_post' post.slug %}" class="text-decoration-none d-flex align-items-center">
+                                            <i class="bi bi-file-earmark-text me-2 text-muted"></i>
+                                            <span class="text-truncate" style="max-width: 200px;">{{ post.title }}</span>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">{{ post.created|date:"M d, Y" }}</small>
+                                    </td>
+                                    <td class="pe-4 text-end">
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-sm btn-outline-dark rounded-start-pill">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="{% url 'blog:delete_post' post.slug %}" class="btn btn-sm btn-outline-danger rounded-end-pill">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-file-earmark-x text-muted" style="font-size: 2rem;"></i>
+                        <p class="text-muted mt-2 mb-0">No published posts yet</p>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
-
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                    <h2 class="h5 fw-bold mb-0">
+                        <i class="bi bi-file-earmark-dash me-2"></i>Drafts
+                    </h2>
+                    <span class="badge bg-secondary rounded-pill">{{ draft_posts|length }}</span>
+                </div>
+                <div class="card-body p-0">
+                    {% if draft_posts %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4">Title</th>
+                                    <th>Date</th>
+                                    <th class="pe-4 text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for post in draft_posts %}
+                                <tr>
+                                    <td class="ps-4">
+                                        <a href="{% url 'blog:edit_post' post.slug %}" class="text-decoration-none d-flex align-items-center">
+                                            <i class="bi bi-file-earmark-text me-2 text-muted"></i>
+                                            <span class="text-truncate" style="max-width: 200px;">{{ post.title }}</span>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">{{ post.created|date:"M d, Y" }}</small>
+                                    </td>
+                                    <td class="pe-4 text-end">
+                                        <div class="btn-group" role="group">
+                                            <form method="post" action="{% url 'blog:publish_draft' %}" class="d-inline">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="post_id" value="{{ post.id }}">
+                                                <button type="submit" class="btn btn-sm btn-outline-success rounded-start-pill">
+                                                    <i class="bi bi-send"></i>
+                                                </button>
+                                            </form>
+                                            <a href="{% url 'blog:edit_post' post.slug %}" class="btn btn-sm btn-outline-dark">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="{% url 'blog:delete_post' post.slug %}" class="btn btn-sm btn-outline-danger rounded-end-pill">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-file-earmark-x text-muted" style="font-size: 2rem;"></i>
+                        <p class="text-muted mt-2 mb-0">No drafts yet</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <h2 class="h5 fw-bold mb-0">
+                        <i class="bi bi-sliders me-2"></i>Preferences
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-check form-switch ps-0 mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-moon-stars me-3"></i>
+                                <input class="form-check-input ms-0" type="checkbox" id="darkMode" name="dark_mode" 
+                                      {% if request.session.dark_mode %}checked{% endif %}>
+                                <label class="form-check-label ms-3" for="darkMode">Dark Mode</label>
+                            </div>
+                        </div>
+                        <button type="submit" name="update_preferences" class="btn btn-dark rounded-pill px-4">
+                            <i class="bi bi-check-circle me-2"></i>Save Preferences
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-{% endblock content %}
+<style>
+    .form-switch .form-check-input {
+        width: 2.5em;
+        height: 1.5em;
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+{% endblock %}

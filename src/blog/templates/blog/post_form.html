@@ -8,18 +8,107 @@
 {% endblock title %}
 
 {% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0 fw-bold">
+                    {% if form.instance.pk %}Edit Post{% else %}Create a New Post{% endif %}
+                </h1>
+                <div>
+                    <button type="button" class="btn btn-sm btn-outline-dark rounded-pill px-3 me-2" data-bs-toggle="modal" data-bs-target="#helpModal">
+                        <i class="bi bi-question-circle"></i> Help
+                    </button>
+                </div>
+            </div>
 
-<div class="container my-5 card border-0 rounded-0 shadow-lg" style="max-width: 700px;">
-    <h1 class="display-5 fw-bold mb-4">
-        {% if form.instance.pk %}Edit Post{% else %}Create a New Post{% endif %}
-    </h1>
-    <form method="post" enctype="multipart/form-data" id="postForm" novalidate data-tag-search-url="{% url 'blog:tag_search' %}">
-        {% csrf_token %}
-        {% crispy form %}
-    </form>
+            <div class="card border-0 shadow-lg mb-4">
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data" id="postForm" novalidate data-tag-search-url="{% url 'blog:tag_search' %}">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            {{ form.title|as_crispy_field }}
+                        </div>
+                        <div class="mb-4">
+                            <label for="id_header_image" class="form-label fw-semibold">Header Image</label>
+                            <div class="image-upload-container border rounded-3 p-3 text-center">
+                                <div class="image-preview mb-3" id="imagePreview" style="display: none;">
+                                    <img src="{% if form.instance.header_image %}{{ form.instance.header_image.url }}{% endif %}" 
+                                         alt="Preview" class="img-fluid rounded-3" id="previewImage">
+                                </div>
+                                {{ form.header_image }}
+                                <label for="id_header_image" class="btn btn-outline-dark rounded-pill px-4 cursor-pointer">
+                                    <i class="bi bi-upload me-2"></i> Upload Image
+                                </label>
+                                <p class="text-muted small mt-2 mb-0">Recommended size: 1200x600px (2:1 ratio)</p>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            {{ form.content|as_crispy_field }}
+                        </div>
+                        <div class="mb-4">
+                            <label for="tag-input-field" class="form-label fw-semibold">Tags</label>
+                            <div class="tag-input-container">
+                                {{ form.tags }}
+                                <div class="input-group">
+                                    <input type="text" id="tag-input-field" class="form-control border-0 border-bottom rounded-0 px-0 py-2" 
+                                           placeholder="Type a tag and press Enter..." list="tag-suggestions">
+                                    <div id="tag-container" class="d-flex flex-wrap gap-2 mt-2"></div>
+                                    <datalist id="tag-suggestions"></datalist>
+                                </div>
+                            </div>
+                            <div class="form-text">Enter up to 5 tags, separated by commas</div>
+                        </div>
+                        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-stretch mt-5 pt-3 border-top gap-2">
+                            <div class="d-flex flex-column flex-sm-row gap-2 w-100 w-sm-auto">
+                                <a href="/" class="btn btn-outline-secondary rounded-pill px-4 flex-grow-1 flex-sm-grow-0">
+                                    Cancel
+                                </a>
+                            </div>
+                            <div class="d-flex flex-column flex-sm-row gap-2 w-100 w-sm-auto">
+                                <button type="submit" name="save_draft" 
+                                        class="btn btn-outline-dark rounded-pill px-4 flex-grow-1">
+                                    Save Draft
+                                </button>
+                                <button type="submit" name="submit" 
+                                        class="btn btn-dark rounded-pill px-4 flex-grow-1">
+                                    Publish
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold" id="helpModalLabel">Writing Help</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6 class="fw-semibold">Formatting Tips</h6>
+                <ul class="small">
+                    <li>Use **asterisks** for <strong>bold</strong> text</li>
+                    <li>Use _underscores_ for <em>italic</em> text</li>
+                    <li>Start lines with # for headings</li>
+                    <li>Add blank lines between paragraphs</li>
+                </ul>
+                <h6 class="fw-semibold mt-3">Image Guidelines</h6>
+                <p class="small">For best results, use high-quality images with a 2:1 aspect ratio (e.g. 1200×600px).</p>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-dark rounded-pill px-4" data-bs-dismiss="modal">Got it!</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="{% static 'js/easymde_config.js' %}"></script>
 <script src="{% static 'js/tags.js' %}"></script>
+<script src="{% static 'js/image_preview.js' %}"></script>
 
 {% endblock content %}
