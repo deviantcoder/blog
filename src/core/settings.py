@@ -47,6 +47,14 @@ ELASTICSEARCH_DSL = {
     },
 }
 
+# Django Rest Framework config
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissons.AllowAny',
+    ],
+}
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -63,6 +71,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'django_elasticsearch_dsl',
     'mptt',
+    'rest_framework',
 
     # apps
 
@@ -71,6 +80,7 @@ INSTALLED_APPS = [
     'profiles.apps.ProfilesConfig',
     'commands.apps.CommandsConfig',
     'blog.apps.BlogConfig',
+    'api.apps.ApiConfig',
 ]
 
 MIDDLEWARE = [
