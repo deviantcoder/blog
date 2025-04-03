@@ -21,4 +21,7 @@ A feature-rich blog application built with Django, supporting authentication, po
 - Pagination
 
 ### Search  
-- Elasticsearch-powered search running in Docker  
+- Elasticsearch-powered search running in Docker
+
+### API  
+- Django Rest Framework 

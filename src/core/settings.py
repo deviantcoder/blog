@@ -51,7 +51,7 @@ ELASTICSEARCH_DSL = {
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissons.AllowAny',
+        'rest_framework.permissions.AllowAny',
     ],
 }
 

@@ -10,6 +10,8 @@ urlpatterns = [
     path('social/', include('social_accounts.urls')),
     path('profile/', include('profiles.urls')),
 
+    path('api/', include('api.urls')),
+
     path('reset_password/', auth_views.PasswordResetView.as_view(
         template_name='password_reset/reset_password.html'
     ), name='reset_password'),

@@ -9,6 +9,7 @@ from django.utils.text import slugify
 from django.core.validators import FileExtensionValidator
 from django.conf import settings
 from django.db import transaction
+from django.urls import reverse
 
 from mptt.models import MPTTModel, TreeForeignKey
 
@@ -114,6 +115,9 @@ class Post(models.Model):
     @property
     def get_created(self):
         return self.created.strftime('%B %d, %Y')
+    
+    def get_absolute_url(self):
+        return reverse('blog:view_post', kwargs={'slug': self.slug})
 
 
 class Comment(MPTTModel):
