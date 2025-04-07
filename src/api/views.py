@@ -1,28 +1,27 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 
 from .serializers import PostSerializer
 
 from blog.models import Post
 
 
-class PostDetailAPIView(APIView):
-    def get(self, request, slug):
-        try:
-            post = Post.objects.get(slug=slug, status='published')
-            serializer = PostSerializer(post, context={'request': request})
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Post.DoesNotExist:
-            return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
+class RecentPostListAPIView(generics.ListAPIView):
+    queryset = Post.objects.all()[:2]
+    serializer_class = PostSerializer
 
 
-class LatestPostsAPIView(APIView):
-    def get(self, request):
-        posts = Post.objects.filter(status='published').order_by('-created')[:5]
-        serializer = PostSerializer(
-            posts,
-            many=True,
-            context={'request': request},
-        )
-        return Response(serializer.data, status=status.HTTP_200_OK)
+class UserPostListAPIView(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(author=self.request.user.profile)
+
+
+class PostDetailAPIView(generics.RetrieveAPIView):
+    queryset = Post.objects.select_related('author__user').prefetch_related('tags')
+    serializer_class = PostSerializer
+    lookup_field = 'slug'

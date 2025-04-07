@@ -26,6 +26,8 @@ urlpatterns = [
     ), name='password_reset_complete'),
 
     path('', include('blog.urls')),
+
+    path('silk/', include('silk.urls', namespace='silk'))
 ]
 
 if settings.DEBUG:

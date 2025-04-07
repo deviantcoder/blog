@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     'django_elasticsearch_dsl',
     'mptt',
     'rest_framework',
+    'silk',
 
     # apps
 
@@ -93,6 +94,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     # 3-rd party
+    'silk.middleware.SilkyMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
