@@ -39,6 +39,30 @@ GITHUB_AUTH_URI = 'https://github.com/login/oauth/authorize'
 GITHUB_TOKEN_URI = 'https://github.com/login/oauth/access_token'
 GITHUB_USERINFO_URI = 'https://api.github.com/user'
 
+SOCIAL_AUTH_PROVIDERS = {
+    'google': {
+        'AUTH_URI': GOOGLE_AUTH_URI,
+        'TOKEN_URI': GOOGLE_TOKEN_URI,
+        'USERINFO_URI': GOOGLE_USERINFO_URI,
+        'CLIENT_ID': GOOGLE_CLIENT_ID,
+        'CLIENT_SECRET': GOOGLE_CLIENT_SECRET,
+        'REDIRECT_URI': GOOGLE_REDIRECT_URI,
+        'SCOPE': 'openid email profile',
+        'UID_FIELD': 'sub',
+    },
+    'github': {
+        'AUTH_URI': GITHUB_AUTH_URI,
+        'TOKEN_URI': GITHUB_TOKEN_URI,
+        'USERINFO_URI': GITHUB_USERINFO_URI,
+        'CLIENT_ID': GITHUB_CLIENT_ID,
+        'CLIENT_SECRET': GITHUB_CLIENT_SECRET,
+        'REDIRECT_URI': GITHUB_REDIRECT_URI,
+        'AUTH_HEADER_FORMAT': 'token {token}',
+        'USERNAME_FROM': 'login',
+        'EMAIL_FALLBACK': lambda data: f"{data.get('login')}@users.noreply.github.com",
+    }
+}
+
 # Elasticsearch config
 
 ELASTICSEARCH_DSL = {
