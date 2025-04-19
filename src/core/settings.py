@@ -97,6 +97,8 @@ INSTALLED_APPS = [
     'mptt',
     'rest_framework',
     'silk',
+    'django_filters',
+    'widget_tweaks',
 
     # apps
 

@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from .models import Post, Comment, Upvote, Tag
 from .forms import PostForm
 from .documents import PostDocument
+from .filters import PostFilter
 
 from core.utils import paginate
 
@@ -15,15 +16,21 @@ User = get_user_model()
 
 
 def home_feed_view(request):
-    posts = Post.objects.filter(status='published').order_by('-created')
+    # posts = Post.objects.filter(status='published').order_by('-created')
 
-    posts, custom_range, paginator = paginate(request, posts, per_page=5)
+    # posts, custom_range, paginator = paginate(request, posts, per_page=5)
+
+    posts_filter = PostFilter(
+        request.GET,
+        queryset=Post.objects.filter(status='published').order_by('-created')
+    )
 
     context = {
         'title': 'Feed',
-        'posts': posts,
-        'custom_range': custom_range,
-        'num_pages': paginator.num_pages,
+        'filter': posts_filter,
+        # 'posts': posts,
+        # 'custom_range': custom_range,
+        # 'num_pages': paginator.num_pages,
         'recent_posts': request.session.get('recent_posts', []),
     }
 
