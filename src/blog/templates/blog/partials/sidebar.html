@@ -16,6 +16,9 @@
         </div>
         <div class="collapse" id="filterCollapse">
             <form method="get">
+                {% if query %}
+                    <input type="hidden" name="query" value="{{ query }}">
+                {% endif %}
                 <div class="mb-3">
                     {{ filter.form.start_date|add_label_class:"form-label" }}
                     {% render_field filter.form.start_date class="form-control rounded-5" %}

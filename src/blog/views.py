@@ -18,10 +18,6 @@ User = get_user_model()
 
 
 def home_feed_view(request):
-    # posts = Post.objects.filter(status='published').order_by('-created')
-
-    # posts, custom_range, paginator = paginate(request, posts, per_page=5)
-
     posts_filter = PostFilter(
         request.GET,
         queryset=Post.objects.filter(status='published').order_by('-created')
@@ -30,9 +26,6 @@ def home_feed_view(request):
     context = {
         'title': 'Feed',
         'filter': posts_filter,
-        # 'posts': posts,
-        # 'custom_range': custom_range,
-        # 'num_pages': paginator.num_pages,
         'recent_posts': request.session.get('recent_posts', []),
     }
 
@@ -163,14 +156,15 @@ def search(request):
 
         post_queryset = Post.objects.filter(id__in=post_ids).order_by('-created') if post_ids else Post.objects.none()
 
-        posts, custom_range, paginator = paginate(request, post_queryset, per_page=5)
+        posts_filter = PostFilter(
+            request.GET,
+            queryset=post_queryset
+        )
 
         context = {
             'title': 'Search',
             'search_query': query or 'Search',
-            'posts': posts,
-            'custom_range': custom_range,
-            'num_pages': paginator.num_pages,
+            'filter': posts_filter,
             'query': query,
             'recent_posts': request.session.get('recent_posts', [])
         }
