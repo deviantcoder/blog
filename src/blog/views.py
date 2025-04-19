@@ -9,6 +9,8 @@ from .forms import PostForm
 from .documents import PostDocument
 from .filters import PostFilter
 
+from elastic_transport import ConnectionError
+
 from core.utils import paginate
 
 
@@ -145,34 +147,37 @@ def delete_post(request, slug):
 
 
 def search(request):
-    query = request.GET.get('query', '').strip()
-    posts = PostDocument.search().filter('term', status='published')
+    try:
+        query = request.GET.get('query', '').strip()
+        posts = PostDocument.search().filter('term', status='published')
 
-    if query:
-        posts = posts.query(
-            'multi_match',
-            query=query,
-            fields=['title^2', 'content'],
-            fuzziness='AUTO'
-        ).sort('-created')
+        if query:
+            posts = posts.query(
+                'multi_match',
+                query=query,
+                fields=['title^2', 'content'],
+                fuzziness='AUTO'
+            ).sort('-created')
 
-    post_ids = [hit.id for hit in posts]
+        post_ids = [hit.id for hit in posts]
 
-    post_queryset = Post.objects.filter(id__in=post_ids).order_by('-created') if post_ids else Post.objects.none()
+        post_queryset = Post.objects.filter(id__in=post_ids).order_by('-created') if post_ids else Post.objects.none()
 
-    posts, custom_range, paginator = paginate(request, post_queryset, per_page=5)
+        posts, custom_range, paginator = paginate(request, post_queryset, per_page=5)
 
-    context = {
-        'title': 'Search',
-        'search_query': query or 'Search',
-        'posts': posts,
-        'custom_range': custom_range,
-        'num_pages': paginator.num_pages,
-        'query': query,
-        'recent_posts': request.session.get('recent_posts', [])
-    }
+        context = {
+            'title': 'Search',
+            'search_query': query or 'Search',
+            'posts': posts,
+            'custom_range': custom_range,
+            'num_pages': paginator.num_pages,
+            'query': query,
+            'recent_posts': request.session.get('recent_posts', [])
+        }
 
-    return render(request, 'blog/search.html', context)
+        return render(request, 'blog/search.html', context)
+    except ConnectionError:
+        return render(request, '404.html')
 
 
 @login_required(login_url='accounts:login')
