@@ -1,0 +1,68 @@
+{% load blog_tags %}
+
+<div id="posts-container">
+    {% for post in posts %}
+        <div class="post-container card mb-4 border-0 shadow hover-shadow p-2 rounded-5">
+            <div class="row g-0">
+                {% if post.header_image %}
+                <div class="col-md-3 d-flex align-items-center">
+                    <a href="{% url 'blog:post_detail' post.slug %}" class="d-block h-100">
+                        <img src="{{ post.header_image.url }}" alt="{{ post.title }}" 
+                            class="img-fluid rounded-5 h-100 w-100" 
+                            style="object-fit: cover; min-height: 200px;">
+                    </a>
+                </div>
+                {% endif %}
+                <div class="col">
+                    <div class="card-body p-4">
+                        <div class="post-meta mb-2 d-flex align-items-center">
+                            <a href="{% url 'profiles:profile' post.author.user.username %}" class="text-decoration-none d-flex align-items-center">
+                                {% if post.author.avatar %}
+                                    <img src="{{ post.author.avatar.url }}" alt="{{ post.author.display_name }}" 
+                                        class="rounded-circle me-2" width="24" height="24">
+                                {% endif %}
+                                <span class="fw-semibold text-dark">{{ post.author.display_name }}</span>
+                            </a>
+                            <span class="text-muted mx-2">·</span>
+                            <span class="text-muted small">{{ post.get_created }}</span>
+                        </div>
+                        <h2 class="post-title mb-2">
+                            <a href="{% url 'blog:post_detail' post.slug %}" class="text-dark text-decoration-none fs-4 fw-bold">
+                                {{ post.title }}
+                            </a>
+                        </h2>
+                        <p class="post-excerpt text-muted mb-3 lh-base">
+                            {{ post.content|plaintext|truncatechars:150 }}
+                        </p>
+                        {% if post.tags.exists %}
+                            <div class="post-tags mt-auto d-flex flex-wrap gap-2">
+                                {% for tag in post.tags.all %}
+                                    <a href="#" class="badge text-decoration-none rounded-pill px-3 py-1" 
+                                    style="background-color: #f0f2f5; color: #4a5568;">
+                                        {{ tag.name }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="text-center py-5">
+            <i class="bi bi-newspaper fs-1 text-muted"></i>
+            <p class="text-muted mt-3">No articles found.</p>
+        </div>
+    {% endfor %}
+</div>
+<style>
+    .post-container {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .post-container:hover {
+        transform: translateY(-2px);
+    }
+    .hover-shadow:hover {
+        box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.1) !important;
+    }
+</style>

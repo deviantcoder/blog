@@ -1,38 +1,46 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-
-from .models import Post, Comment, Upvote, Tag
-from .forms import PostForm
-from .documents import PostDocument
-from .filters import PostFilter
+from django.core.paginator import Paginator
+from django.conf import settings
 
 from elastic_transport import ConnectionError
 
 from core.utils import paginate
 
+from .documents import PostDocument
+from .filters import PostFilter
+from .forms import PostForm
+from .models import Comment, Post, Tag, Upvote
 
 User = get_user_model()
 
 
-def home_feed_view(request):
+def posts_list(request):
     posts_filter = PostFilter(
         request.GET,
         queryset=Post.objects.filter(status='published').order_by('-created')
     )
 
+    paginator = Paginator(posts_filter.qs, settings.PAGE_SIZE)
+    posts = paginator.page(1)
+
     context = {
+        'posts': posts,
         'title': 'Feed',
         'filter': posts_filter,
         'recent_posts': request.session.get('recent_posts', []),
     }
 
-    return render(request, 'blog/home_feed.html', context)
+    if request.htmx:
+        return render(request, 'blog/partials/posts-container.html', context)
+
+    return render(request, 'blog/posts-list.html', context)
 
 
-def view_post(request, slug):
+def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
 
     if request.user.is_authenticated:
@@ -70,7 +78,7 @@ def create_post(request):
 
             messages.success(request, f'Post {'saved as draft' if post.status == 'draft' else 'published'}')
 
-            return redirect('blog:view_post', post.slug)
+            return redirect('blog:post_detail', post.slug)
     else:
         form = PostForm()
 
@@ -105,7 +113,7 @@ def edit_post(request, slug):
 
             messages.success(request, f'Post {'saved as draft' if post.status == 'draft' else 'published'}')
             
-            return redirect('blog:view_post', post.slug)
+            return redirect('blog:post_detail', post.slug)
     else:
         form = PostForm(instance=post)
 
@@ -196,7 +204,7 @@ def create_comment(request, slug):
         else:
             messages.warning(request, 'Comment cannot be empty')
         
-        return redirect('blog:view_post', slug)
+        return redirect('blog:post_detail', slug)
 
 
 @login_required(login_url='accounts:login')
@@ -214,11 +222,11 @@ def upvote_post(request, slug):
         )
         messages.success(request, 'Post upvoted')
 
-    return redirect('blog:view_post', slug)
+    return redirect('blog:post_detail', slug)
 
 
 @login_required(login_url='accounts:login')
-def settings(request):
+def user_settings(request):
     user = request.user
     if request.method == 'POST':
         if 'update_username' in request.POST:

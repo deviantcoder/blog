@@ -15,7 +15,12 @@
             </button>
         </div>
         <div class="collapse" id="filterCollapse">
-            <form method="get">
+            <form
+                hx-get="{% url 'blog:posts_list' %}"
+                hx-target="#posts-container"
+                hx-swap="outerHTML"
+                id="filterForm"
+            >
                 {% if query %}
                     <input type="hidden" name="query" value="{{ query }}">
                 {% endif %}
@@ -53,7 +58,7 @@
             {% for post_id in recent_posts %}
                 {% with post=posts|get_post_by_id:post_id %}
                     {% if post %}
-                        <a href="{% url 'blog:view_post' post.slug %}" class="list-group-item list-group-item-action p-2">
+                        <a href="{% url 'blog:post_detail' post.slug %}" class="list-group-item list-group-item-action p-2">
                             <div class="d-flex w-100 justify-content-between">
                                 <h6 class="mb-1">{{ post.title }}</h6>
                             </div>

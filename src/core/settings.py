@@ -99,6 +99,7 @@ INSTALLED_APPS = [
     'silk',
     'django_filters',
     'widget_tweaks',
+    'django_htmx',
 
     # apps
 
@@ -121,6 +122,7 @@ MIDDLEWARE = [
 
     # 3-rd party
     'silk.middleware.SilkyMiddleware',
+    'django_htmx.middleware.HtmxMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -267,3 +269,6 @@ MAX_IMAGE_SIZE = 10
 # Default primary key field type
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+PAGE_SIZE = 20
