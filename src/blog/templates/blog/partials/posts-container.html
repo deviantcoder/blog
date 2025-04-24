@@ -1,17 +1,27 @@
 {% load blog_tags %}
+{% load partials %}
 
 <div id="posts-container">
+    {% partialdef post_list inline=True %}
     {% for post in posts %}
-        <div class="post-container card mb-4 border-0 shadow hover-shadow p-2 rounded-5">
+        <div class="post-container card mb-4 border-0 shadow hover-shadow p-2 rounded-5"
+        {% if forloop.last and posts.has_next %}
+            hx-get="{% url 'blog:get_posts' %}?page={{ posts.next_page_number }}"
+            hx-trigger="revealed"
+            hx-swap="afterend"
+            hx-include="#filterForm"
+            hx-indicator="#spinner"
+        {% endif %}
+        >
             <div class="row g-0">
                 {% if post.header_image %}
-                <div class="col-md-3 d-flex align-items-center">
-                    <a href="{% url 'blog:post_detail' post.slug %}" class="d-block h-100">
-                        <img src="{{ post.header_image.url }}" alt="{{ post.title }}" 
-                            class="img-fluid rounded-5 h-100 w-100" 
-                            style="object-fit: cover; min-height: 200px;">
-                    </a>
-                </div>
+                    <div class="col-md-3 d-flex align-items-center">
+                        <a href="{% url 'blog:post_detail' post.slug %}" class="d-block h-100">
+                            <img src="{{ post.header_image.url }}" alt="{{ post.title }}" 
+                                class="img-fluid rounded-5 h-100 w-100" 
+                                style="object-fit: cover; min-height: 200px;">
+                        </a>
+                    </div>
                 {% endif %}
                 <div class="col">
                     <div class="card-body p-4">
@@ -54,15 +64,8 @@
             <p class="text-muted mt-3">No articles found.</p>
         </div>
     {% endfor %}
+    {% endpartialdef %}
+    <div class="d-flex justify-content-center">
+        <span class="loader htmx-indicator" id="spinner"></span>
+    </div>
 </div>
-<style>
-    .post-container {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .post-container:hover {
-        transform: translateY(-2px);
-    }
-    .hover-shadow:hover {
-        box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.1) !important;
-    }
-</style>

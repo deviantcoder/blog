@@ -19,6 +19,7 @@ A feature-rich blog application built with Django, supporting authentication, po
 - Upvoting system 
 - Recently viewed posts (stored in session)  
 - Pagination
+- Dynamic filtering (django-filter, htmx)
 
 ### Search  
 - Elasticsearch-powered search running in Docker

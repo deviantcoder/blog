@@ -54,7 +54,7 @@
     <hr class="my-4">
     <div>
         <h3 class="h5 mb-3">Recently Viewed Posts</h3>
-        <div class="list-group">
+        <div class="list-group rounded-4">
             {% for post_id in recent_posts %}
                 {% with post=posts|get_post_by_id:post_id %}
                     {% if post %}
@@ -72,17 +72,3 @@
         </div>
     </div>
 </div>
-<style>
-    .sidebar {
-        position: sticky;
-        top: 70px;
-    }
-    [data-bs-toggle="collapse"] .bi-chevron-down {
-        transition: transform 0.2s ease;
-    }
-    .tag-filter {
-        border: 1px solid #dee2e6;
-        border-radius: 0.5rem;
-        padding: 0.5rem;
-    }
-</style>

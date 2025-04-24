@@ -40,6 +40,23 @@ def posts_list(request):
     return render(request, 'blog/posts-list.html', context)
 
 
+def get_posts(request):
+    page = request.GET.get('page', 1)
+
+    posts_filter = PostFilter(
+        request.GET,
+        queryset=Post.objects.filter(status='published').order_by('-created')
+    )
+
+    paginator = Paginator(posts_filter.qs, settings.PAGE_SIZE)
+
+    context = {
+        'posts': paginator.page(page),
+    }
+
+    return render(request, 'blog/partials/posts-container.html#post_list', context)
+
+
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
 

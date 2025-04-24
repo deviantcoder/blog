@@ -100,6 +100,7 @@ INSTALLED_APPS = [
     'django_filters',
     'widget_tweaks',
     'django_htmx',
+    'template_partials',
 
     # apps
 
@@ -271,4 +272,4 @@ MAX_IMAGE_SIZE = 10
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-PAGE_SIZE = 20
+PAGE_SIZE = 2
