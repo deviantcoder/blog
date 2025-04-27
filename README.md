@@ -20,6 +20,7 @@ A feature-rich blog application built with Django, supporting authentication, po
 - Recently viewed posts (stored in session)  
 - Pagination
 - Dynamic filtering (django-filter, htmx)
+- Infinite scroll
 
 ### Search  
 - Elasticsearch-powered search running in Docker
