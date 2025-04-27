@@ -99,7 +99,7 @@ class Post(models.Model):
             try:
                 old_instance = Post.objects.get(id=self.id)
                 if old_instance.header_image == self.header_image:
-                    super().save(*args, **kwargs)
+                    super().save()
                     return
             except Post.DoesNotExist:
                 send_log(logger, f'Instance with id {self.id} not found during update.', level='warning')
@@ -110,7 +110,7 @@ class Post(models.Model):
             except Exception as e:
                 send_log(logger, f'Image compression failed for (post): {self.id}: {e}.', level='error')
 
-        super().save(*args, *kwargs)
+        super().save(**kwargs)
 
     @property
     def get_created(self):

@@ -17,3 +17,5 @@ src/staticfiles/vendors
 local_cdn/
 vendor/
 db.sqlite3
+
+src/media/posts/
